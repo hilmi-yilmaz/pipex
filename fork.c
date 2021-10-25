@@ -29,7 +29,9 @@ int my_system(const char *command)
 	}
 	else
 	{
-		/* this is the parent process. Wait for the child to complete */
+		/* this is the parent process. Wait for the child to complete.
+			waitpid returns the pid of the childprocess.
+		*/
 		printf("Waiting for child process to return\n");
 		if (waitpid(pid, &status, 0) != pid)
 			status = -1;
