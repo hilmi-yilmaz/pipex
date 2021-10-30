@@ -1,18 +1,24 @@
 #include "pipex.h"
 
-int main(int argc, char **argv)
+static int	check_input(int argc)
 {
-	int		ret;
-	int		status;
-	int		fds[2];
-	pid_t	pid;
-	
-	/* Input check */
 	if (argc != 5)
     {
         printf("Error\nWrong amount of arguments. Run as: ./pipex file1 cmd1 cmd2 file2\n");
         return (RETURN_FAILURE);
     }
+	return (RETURN_SUCCESS);
+}
+
+int main(int argc, char **argv)
+{
+	int		ret;
+	int		fds[2];
+	pid_t	pid;
+	
+	/* Input check */
+	if (check_input(argc))
+		return (-1);
 
 	/* Print arguments */
     printf("0 = %s\n", argv[0]);
@@ -26,51 +32,11 @@ int main(int argc, char **argv)
 	ret = pipe(fds);
 	if (ret == -1)
 	{
-		printf("Error\n%s\n", strerror(errno));
-		return (RETURN_FAILURE);
+		return (-1);
 	}
 
 	/* Fork process */
 	pid = fork();
-
-	/* Child process: write to pipe */
-	if (pid == 0)
-	{
-		ret = close(fds[0]);
-		if (ret == -1)
-		{
-			printf("Error\n%s\n", strerror(errno));
-			return (RETURN_FAILURE);
-		}
-		ret = write(fds[1], argv[1], ft_strlen(argv[1]) + 1);
-		if (ret == -1)
-		{
-			printf("Error\n%s\n", strerror(errno));
-			return (RETURN_FAILURE);
-		}
-		exit(RETURN_SUCCESS);
-	}
-
-	/* Main process: read form pipe */
-	if (pid > 0)
-	{
-		ret = waitpid(pid, &status, 0); // returns process id
-		if (ret == -1)
-		{
-			printf("Error\n%s\n", strerror(errno));
-			return (RETURN_FAILURE);
-		}
-		close(fds[1]);
-		char	buff[100];
-		ret = read(fds[0], buff, 5);
-		if (ret == -1)
-		{
-			printf("Error\n%s\n", strerror(errno));
-			return (RETURN_FAILURE);
-		}
-		printf("buff = |%s|\n", buff);
-		close(fds[0]);
-	}
 
 	/* Error forking */
 	if (pid < 0)
@@ -78,5 +44,27 @@ int main(int argc, char **argv)
 		printf("Error while forking process\n");
 		return (RETURN_FAILURE);
 	}
+
+	/* Child process: write to pipe */
+	if (pid == 0)
+	{
+		close(fds[0]);
+		dup2(fds[1], STDOUT_FILENO);
+		char *args[] = {"/bin/ls", "-l", NULL};
+		//char *path[] = {"PATH=/bin:/usr/bin", NULL};
+		execve(args[0], args, NULL);
+	}
+
+	/* Main process: read form pipe */
+	if (pid > 0)
+	{
+		close(fds[1]);
+		dup2(fds[0], STDIN_FILENO);
+		char *args[] = {"/bin/grep", "fork", NULL};
+		//char *path[] = {"PATH=/bin:/usr/bin", NULL};
+		execve(args[0], args, NULL);
+	}
+
+
 	return (RETURN_SUCCESS);
 }
