@@ -52,6 +52,7 @@ int main(int argc, char **argv, char **envp)
 	if (pid == 0)
 	{
 		close(fds[0]);
+		close(data.file_out);
 		dup2(fds[1], STDOUT_FILENO);
 		dup2(data.file_in, STDIN_FILENO);
 		close(fds[1]);
@@ -70,6 +71,7 @@ int main(int argc, char **argv, char **envp)
 	if (pid2 == 0)
 	{
 		close(fds[1]);
+		close(data.file_in);
 		dup2(fds[0], STDIN_FILENO);
 		dup2(data.file_out, STDOUT_FILENO);
 		close(fds[0]);
@@ -79,6 +81,8 @@ int main(int argc, char **argv, char **envp)
 
 	close(fds[0]);
 	close(fds[1]);
+	close(data.file_in);
+	close(data.file_out);
 
 	waitpid(pid, NULL, 0);
 	waitpid(pid2, NULL, 0);
