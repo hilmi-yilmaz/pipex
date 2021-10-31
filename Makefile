@@ -1,10 +1,12 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror
+CFLAGS = -Wall -Wextra -Werror -fsanitize=address
 
 SRC_DIR = src
-SRC_FILES = pipex.c
+SRC_FILES = pipex.c \
+			parse_input.c
 
-HEADER_FILES = 	pipex.h
+HEADER_FILES = 	pipex.h \
+				parse_input.h
 
 OBJ_DIR = obj
 OBJ_FILES = $(SRC_FILES:%.c=$(OBJ_DIR)/%.o)

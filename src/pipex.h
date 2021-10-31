@@ -12,9 +12,6 @@
 /* User defined headers */
 # include "libft/libft.h"
 # include "data.h"
-
-/* Macros */
-# define RETURN_FAILURE -1
-# define RETURN_SUCCESS 0
+# include "parse_input.h"
 
 #endif

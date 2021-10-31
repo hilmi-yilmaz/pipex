@@ -23,20 +23,9 @@ int main(int argc, char **argv, char **envp)
 
 	/* Initialize data */
 	ft_bzero(&data, sizeof(data));
-	printf("file1 = %p\n", data.file1);
-	printf("file2 = %p\n", data.file2);
-	printf("cmd1 = %p\n", data.cmd1);
-	printf("cmd2 = %p\n", data.cmd2);
 
 	/* Parse data */
-
-	/* Print arguments */
-    printf("0 = %s\n", argv[0]);
-	printf("1 = %s\n", argv[1]);
-	printf("2 = %s\n", argv[2]);
-	printf("3 = %s\n", argv[3]);
-	printf("4 = %s\n", argv[4]);
-	printf("5 = %s\n", argv[5]);
+	parse_input(argv, &data);
 
 	/* Create pipe */
 	ret = pipe(fds);
@@ -61,15 +50,17 @@ int main(int argc, char **argv, char **envp)
 	if (pid == 0)
 	{
 		//char *args[] = {"/usr/bin/ls", "-la", NULL};
-		char **alloc = malloc(sizeof(char*) * 3);
+		char **alloc = malloc(sizeof(char*) * 4);
 		alloc[0] = malloc(sizeof(char) * 12);
 		ft_strlcpy(alloc[0], "/usr/bin/ls", 12);
-		alloc[1] = malloc(sizeof(char) * 4);
-		ft_strlcpy(alloc[1], "-la", 4);
-		alloc[2] = NULL;
-		printf("alloc[0] = %s\n", alloc[0]);
-		printf("alloc[1] = %s\n", alloc[1]);
-		printf("alloc[2] = %s\n", alloc[2]);
+		alloc[1] = malloc(sizeof(char) * 6);
+		ft_strlcpy(alloc[1], "-l", 3);
+		alloc[2] = malloc(sizeof(char) * 3);
+		ft_strlcpy(alloc[2], "-a", 3);
+		alloc[3] = 0;
+		// printf("alloc[0] = %s\n", alloc[0]);
+		// printf("alloc[1] = %s\n", alloc[1]);
+		// printf("alloc[2] = %s\n", alloc[2]);
 
 		close(fds[0]);
 		dup2(fds[1], STDOUT_FILENO);

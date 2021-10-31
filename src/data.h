@@ -1,5 +1,9 @@
 #ifndef DATA_H
-# define DAHA_H
+# define DATA_H
+
+/* Macros */
+# define RETURN_FAILURE -1
+# define RETURN_SUCCESS 0
 
 /* Data structures */
 typedef struct s_data
