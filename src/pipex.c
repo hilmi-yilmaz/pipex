@@ -10,15 +10,25 @@ static int	check_input(int argc)
 	return (RETURN_SUCCESS);
 }
 
-int main(int argc, char **argv)
+int main(int argc, char **argv, char **envp)
 {
 	int		ret;
 	int		fds[2];
 	pid_t	pid;
+	t_data	data;
 	
 	/* Input check */
 	if (check_input(argc))
 		return (-1);
+
+	/* Initialize data */
+	ft_bzero(&data, sizeof(data));
+	printf("file1 = %p\n", data.file1);
+	printf("file2 = %p\n", data.file2);
+	printf("cmd1 = %p\n", data.cmd1);
+	printf("cmd2 = %p\n", data.cmd2);
+
+	/* Parse data */
 
 	/* Print arguments */
     printf("0 = %s\n", argv[0]);
@@ -45,24 +55,34 @@ int main(int argc, char **argv)
 		return (RETURN_FAILURE);
 	}
 
+
+
 	/* Child process: write to pipe */
 	if (pid == 0)
 	{
+		//char *args[] = {"/usr/bin/ls", "-la", NULL};
+		char **alloc = malloc(sizeof(char*) * 3);
+		alloc[0] = malloc(sizeof(char) * 12);
+		ft_strlcpy(alloc[0], "/usr/bin/ls", 12);
+		alloc[1] = malloc(sizeof(char) * 4);
+		ft_strlcpy(alloc[1], "-la", 4);
+		alloc[2] = NULL;
+		printf("alloc[0] = %s\n", alloc[0]);
+		printf("alloc[1] = %s\n", alloc[1]);
+		printf("alloc[2] = %s\n", alloc[2]);
+
 		close(fds[0]);
 		dup2(fds[1], STDOUT_FILENO);
-		char *args[] = {"/bin/ls", "-l", NULL};
-		//char *path[] = {"PATH=/bin:/usr/bin", NULL};
-		execve(args[0], args, NULL);
+		execve(alloc[0], alloc, envp);
 	}
 
 	/* Main process: read form pipe */
 	if (pid > 0)
 	{
+		char *args[] = {"/usr/bin/wc", "-l", NULL};
 		close(fds[1]);
 		dup2(fds[0], STDIN_FILENO);
-		char *args[] = {"/bin/grep", "fork", NULL};
-		//char *path[] = {"PATH=/bin:/usr/bin", NULL};
-		execve(args[0], args, NULL);
+		execve(args[0], args, envp);
 	}
 
 
