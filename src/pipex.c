@@ -48,24 +48,40 @@ int main(int argc, char **argv, char **envp)
 		printf("Error while forking process\n");
 		return (RETURN_FAILURE);
 	}
-	/* Child process: write to pipe */
+	/* Child process 1: write to pipe */
 	if (pid == 0)
 	{
 		close(fds[0]);
 		dup2(fds[1], STDOUT_FILENO);
 		dup2(data.file_in, STDIN_FILENO);
+		close(fds[1]);
+		close(data.file_in);
 		execve(data.cmd1[0], data.cmd1, envp);
 	}
-	/* Main process: read form pipe */
-	if (pid > 0)
+
+	/* Child process 2: Read from pipe */
+	int	pid2 = fork();
+	if (pid2 < 0)
+	{
+		printf("Error while forking process\n");
+		return (RETURN_FAILURE);
+	}
+
+	if (pid2 == 0)
 	{
 		close(fds[1]);
 		dup2(fds[0], STDIN_FILENO);
 		dup2(data.file_out, STDOUT_FILENO);
+		close(fds[0]);
 		close(data.file_out);
 		execve(data.cmd2[0], data.cmd2, envp);
 	}
 
+	close(fds[0]);
+	close(fds[1]);
+
+	waitpid(pid, NULL, 0);
+	waitpid(pid2, NULL, 0);
 
 	return (RETURN_SUCCESS);
 }
