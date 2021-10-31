@@ -8,8 +8,8 @@
 /* Data structures */
 typedef struct s_data
 {
-	char	*file1;
-	char	*file2;
+	int		file1;
+	int		file2;
 	char	**cmd1;
 	char	**cmd2;
 }				t_data;

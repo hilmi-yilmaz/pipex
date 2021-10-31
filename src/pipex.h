@@ -8,6 +8,7 @@
 # include <errno.h>
 # include <stdlib.h> //for exit
 # include <sys/wait.h>
+# include <fcntl.h> // for open
 
 /* User defined headers */
 # include "libft/libft.h"

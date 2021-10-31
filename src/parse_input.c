@@ -35,8 +35,13 @@ int	parse_input(char **argv, t_data *data)
 {
 	int	ret;
 
-	data->file1 = argv[1];
-	data->file2 = argv[4];
+	data->file1 = open(argv[1], O_RDONLY, 0666); // file1 has to already exist
+	if (data->file1 == -1)
+	{
+		printf("%s\n", strerror(errno));
+		return (4);
+	}
+	data->file2 = open(argv[4], O_CREAT | O_WRONLY, 0666);
 	data->cmd1 = ft_split(argv[2], ' ');
 	if (data->cmd1 == NULL)
 		return (RETURN_FAILURE);

@@ -16,6 +16,8 @@ int main(int argc, char **argv, char **envp)
 	int		fds[2];
 	pid_t	pid;
 	t_data	data;
+
+
 	
 	/* Input check */
 	if (check_input(argc))
@@ -28,8 +30,8 @@ int main(int argc, char **argv, char **envp)
 	parse_input(argv, &data);
 
 	/* print parsed data */
-	printf("file1 = %s\n", data.file1);
-	printf("file2 = %s\n", data.file2);
+	printf("file1 = %d\n", data.file1);
+	printf("file2 = %d\n", data.file2);
 	printf("cmd1 = ");
 	int i = 0;
 	while (data.cmd1[i] != NULL)
@@ -63,36 +65,21 @@ int main(int argc, char **argv, char **envp)
 		printf("Error while forking process\n");
 		return (RETURN_FAILURE);
 	}
-
-
-
 	/* Child process: write to pipe */
 	if (pid == 0)
 	{
-		//char *args[] = {"/usr/bin/ls", "-la", NULL};
-		// char **alloc = malloc(sizeof(char*) * 4);
-		// alloc[0] = malloc(sizeof(char) * 12);
-		// ft_strlcpy(alloc[0], "/usr/bin/ls", 12);
-		// alloc[1] = malloc(sizeof(char) * 6);
-		// ft_strlcpy(alloc[1], "-l", 3);
-		// alloc[2] = malloc(sizeof(char) * 3);
-		// ft_strlcpy(alloc[2], "-a", 3);
-		// alloc[3] = 0;
-		// printf("alloc[0] = %s\n", alloc[0]);
-		// printf("alloc[1] = %s\n", alloc[1]);
-		// printf("alloc[2] = %s\n", alloc[2]);
-
 		close(fds[0]);
 		dup2(fds[1], STDOUT_FILENO);
+		dup2(data.file1, STDIN_FILENO);
 		execve(data.cmd1[0], data.cmd1, envp);
 	}
-
 	/* Main process: read form pipe */
 	if (pid > 0)
 	{
-		// char *args[] = {"/usr/bin/wc", "-l", NULL};
 		close(fds[1]);
 		dup2(fds[0], STDIN_FILENO);
+		dup2(data.file2, STDOUT_FILENO);
+		close(data.file2);
 		execve(data.cmd2[0], data.cmd2, envp);
 	}
 
