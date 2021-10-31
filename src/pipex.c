@@ -4,7 +4,7 @@ static int	check_input(int argc)
 {
 	if (argc != 5)
     {
-        printf("Error\nWrong amount of arguments. Run as: ./pipex file1 cmd1 cmd2 file2\n");
+        printf("Error\nWrong amount of arguments. Run as: ./pipex file_in cmd1 cmd2 file_out\n");
         return (RETURN_FAILURE);
     }
 	return (RETURN_SUCCESS);
@@ -29,25 +29,8 @@ int main(int argc, char **argv, char **envp)
 	/* Parse data */
 	parse_input(argv, &data);
 
-	/* print parsed data */
-	printf("file1 = %d\n", data.file1);
-	printf("file2 = %d\n", data.file2);
-	printf("cmd1 = ");
-	int i = 0;
-	while (data.cmd1[i] != NULL)
-	{
-		printf("%s ", data.cmd1[i]);
-		i++;
-	}
-	printf("\n");
-	printf("cmd2 = ");
-	i = 0;
-	while (data.cmd2[i] != NULL)
-	{
-		printf("%s ", data.cmd2[i]);
-		i++;
-	}
-	printf("\n");
+	/* Print data */
+	print_data(data);
 
 	/* Create pipe */
 	ret = pipe(fds);
@@ -70,7 +53,7 @@ int main(int argc, char **argv, char **envp)
 	{
 		close(fds[0]);
 		dup2(fds[1], STDOUT_FILENO);
-		dup2(data.file1, STDIN_FILENO);
+		dup2(data.file_in, STDIN_FILENO);
 		execve(data.cmd1[0], data.cmd1, envp);
 	}
 	/* Main process: read form pipe */
@@ -78,8 +61,8 @@ int main(int argc, char **argv, char **envp)
 	{
 		close(fds[1]);
 		dup2(fds[0], STDIN_FILENO);
-		dup2(data.file2, STDOUT_FILENO);
-		close(data.file2);
+		dup2(data.file_out, STDOUT_FILENO);
+		close(data.file_out);
 		execve(data.cmd2[0], data.cmd2, envp);
 	}
 

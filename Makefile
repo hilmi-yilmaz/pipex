@@ -3,10 +3,12 @@ CFLAGS = -Wall -Wextra -Werror
 
 SRC_DIR = src
 SRC_FILES = pipex.c \
-			parse_input.c
+			parse_input.c \
+			utils.c
 
 HEADER_FILES = 	pipex.h \
-				parse_input.h
+				parse_input.h \
+				utils.h
 
 OBJ_DIR = obj
 OBJ_FILES = $(SRC_FILES:%.c=$(OBJ_DIR)/%.o)

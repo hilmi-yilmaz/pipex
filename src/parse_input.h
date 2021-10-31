@@ -12,6 +12,7 @@
 # include "libft/libft.h"
 # include "data.h"
 
+/* Function prototypes */
 int	parse_input(char **argv, t_data *data);
 
 #endif

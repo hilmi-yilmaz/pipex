@@ -20,9 +20,6 @@ static int	wrapper_strjoin(char *path, char **cmd)
 {
 	char	*tmp;
 
-	printf("path = %s\n", path);
-	printf("cmd = %s\n", *cmd);
-
 	tmp = *cmd;
 	*cmd = ft_strjoin(path, *cmd);
 	free(tmp);
@@ -35,13 +32,13 @@ int	parse_input(char **argv, t_data *data)
 {
 	int	ret;
 
-	data->file1 = open(argv[1], O_RDONLY, 0666); // file1 has to already exist
-	if (data->file1 == -1)
+	data->file_in = open(argv[1], O_RDONLY); // file_in has to already exist
+	if (data->file_in == -1)
 	{
 		printf("%s\n", strerror(errno));
 		return (4);
 	}
-	data->file2 = open(argv[4], O_CREAT | O_WRONLY, 0666);
+	data->file_out = open(argv[4], O_CREAT | O_WRONLY, 0666);
 	data->cmd1 = ft_split(argv[2], ' ');
 	if (data->cmd1 == NULL)
 		return (RETURN_FAILURE);

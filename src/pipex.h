@@ -14,5 +14,6 @@
 # include "libft/libft.h"
 # include "data.h"
 # include "parse_input.h"
+# include "utils.h"
 
 #endif
