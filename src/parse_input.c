@@ -1,21 +1,5 @@
 #include "parse_input.h"
 
-// static int	count_words(char *str, char sep)
-// {
-// 	int	i;
-// 	int	count;
-
-// 	i = 0;
-// 	count = 0;
-// 	while (str[i] != '\0')
-// 	{
-// 		if (str[i] != sep && (str[i + 1] == sep || str[i + 1] == '\0'))
-// 			count++;
-// 		i++;
-// 	}
-// 	return (count);
-// }
-
 static int	wrapper_strjoin(char *path, char **cmd)
 {
 	char	*tmp;

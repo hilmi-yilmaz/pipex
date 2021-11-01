@@ -4,10 +4,12 @@ CFLAGS = -Wall -Wextra -Werror
 SRC_DIR = src
 SRC_FILES = pipex.c \
 			parse_input.c \
+			child_process.c \
 			utils.c
 
 HEADER_FILES = 	pipex.h \
 				parse_input.h \
+				child_process.h \
 				utils.h
 
 OBJ_DIR = obj

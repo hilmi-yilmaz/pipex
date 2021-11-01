@@ -1,6 +1,8 @@
 #ifndef DATA_H
 # define DATA_H
 
+/* System headers */
+
 /* Macros */
 # define RETURN_FAILURE -1
 # define RETURN_SUCCESS 0
@@ -13,5 +15,11 @@ typedef struct s_data
 	char	**cmd1;
 	char	**cmd2;
 }				t_data;
+
+typedef struct	s_pids
+{
+	pid_t	one;
+	pid_t	two;
+}				t_pids;
 
 #endif

@@ -14,7 +14,7 @@ int main(int argc, char **argv, char **envp)
 {
 	int		ret;
 	int		fds[2];
-	pid_t	pid;
+	t_pids  pid;
 	t_data	data;
 
 	/* Input check */
@@ -38,35 +38,36 @@ int main(int argc, char **argv, char **envp)
 	}
 
 	/* Fork process */
-	pid = fork();
+	pid.one = fork();
 
 	/* Error forking */
-	if (pid < 0)
+	if (pid.one < 0)
 	{
 		printf("Error while forking process\n");
 		return (RETURN_FAILURE);
 	}
 	/* Child process 1: write to pipe */
-	if (pid == 0)
+	if (pid.one == 0)
 	{
-		close(fds[0]);
-		close(data.file_out);
-		dup2(fds[1], STDOUT_FILENO);
-		dup2(data.file_in, STDIN_FILENO);
-		close(fds[1]);
-		close(data.file_in);
-		execve(data.cmd1[0], data.cmd1, envp);
+		// close(fds[0]);
+		// close(data.file_out);
+		// dup2(fds[1], STDOUT_FILENO);
+		// dup2(data.file_in, STDIN_FILENO);
+		// close(fds[1]);
+		// close(data.file_in);
+		// execve(data.cmd1[0], data.cmd1, envp);
+        child_one(data, fds, envp);
 	}
 
 	/* Child process 2: Read from pipe */
-	int	pid2 = fork();
-	if (pid2 < 0)
+	pid.two = fork();
+	if (pid.two < 0)
 	{
 		printf("Error while forking process\n");
 		return (RETURN_FAILURE);
 	}
 
-	if (pid2 == 0)
+	if (pid.two == 0)
 	{
 		close(fds[1]);
 		close(data.file_in);
@@ -82,8 +83,8 @@ int main(int argc, char **argv, char **envp)
 	close(data.file_in);
 	close(data.file_out);
 
-	waitpid(pid, NULL, 0);
-	waitpid(pid2, NULL, 0);
+	waitpid(pid.one, NULL, 0);
+	waitpid(pid.two, NULL, 0);
 
 	return (RETURN_SUCCESS);
 }

@@ -15,5 +15,6 @@
 # include "data.h"
 # include "parse_input.h"
 # include "utils.h"
+# include "child_process.h"
 
 #endif
