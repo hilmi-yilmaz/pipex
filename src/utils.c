@@ -5,7 +5,7 @@ void	print_data(t_data data)
 	int i;
 	
 	i = 0;
-	printf("---------------------------------");
+	printf("---------------------------------\n");
 	printf("Input  file descripter = %d\n", data.file_in);
 	printf("Output file descriptor = %d\n", data.file_out);
 	printf("cmd1 = ");

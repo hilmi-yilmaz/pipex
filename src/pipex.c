@@ -56,7 +56,7 @@ int main(int argc, char **argv, char **envp)
 		// close(fds[1]);
 		// close(data.file_in);
 		// execve(data.cmd1[0], data.cmd1, envp);
-        child_one(data, fds, envp);
+        child_one(&data, fds, envp);
 	}
 
 	/* Child process 2: Read from pipe */
