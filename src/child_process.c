@@ -45,5 +45,17 @@ int child_one(t_data *data, int *fds, char **envp)
 	close(fds[1]);
 	close(data->file_in);
 	execve(data->cmd1[0], data->cmd1, envp);
-	return (0);
+	return (RETURN_SUCCESS);
+}
+
+int	child_two(t_data *data, int *fds, char **envp)
+{
+	close(fds[1]);
+	close(data->file_in);
+	dup2(fds[0], STDIN_FILENO);
+	dup2(data->file_out, STDOUT_FILENO);
+	close(fds[0]);
+	close(data->file_out);
+	execve(data->cmd2[0], data->cmd2, envp);
+	return (RETURN_SUCCESS);
 }

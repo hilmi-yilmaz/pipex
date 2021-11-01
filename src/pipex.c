@@ -17,60 +17,37 @@ int main(int argc, char **argv, char **envp)
 	t_pids  pid;
 	t_data	data;
 
-	/* Input check */
 	if (check_input(argc))
 		return (-1);
-
-	/* Initialize data */
 	ft_bzero(&data, sizeof(data));
-
-	/* Parse data */
 	parse_input(&data, argv, envp);
-
-	/* Print data */
-	print_data(data);
-
-	/* Create pipe */
+	//print_data(data);
 	ret = pipe(fds);
 	if (ret == -1)
 	{
+		printf("Error creating pipe.\n%s\n", strerror(errno));
 		return (-1);
 	}
-
-	/* Fork process */
 	pid.one = fork();
-
-	/* Error forking */
 	if (pid.one < 0)
 	{
-		printf("Error while forking process\n");
+		printf("Error forking process (child 1)\n%s\n", strerror(errno));
 		return (RETURN_FAILURE);
 	}
 	/* Child process 1: write to pipe */
 	if (pid.one == 0)
-	{
         child_one(&data, fds, envp);
-	}
 
 	/* Child process 2: Read from pipe */
 	pid.two = fork();
 	if (pid.two < 0)
 	{
-		printf("Error while forking process\n");
+		printf("Error forking process (child 2)\n%s\n", strerror(errno));
 		return (RETURN_FAILURE);
 	}
-
 	if (pid.two == 0)
-	{
-		close(fds[1]);
-		close(data.file_in);
-		dup2(fds[0], STDIN_FILENO);
-		dup2(data.file_out, STDOUT_FILENO);
-		close(fds[0]);
-		close(data.file_out);
-		execve(data.cmd2[0], data.cmd2, envp);
-	}
-
+		child_two(&data, fds, envp);
+	
 	close(fds[0]);
 	close(fds[1]);
 	close(data.file_in);

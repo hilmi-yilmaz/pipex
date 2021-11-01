@@ -12,5 +12,6 @@
 
 /* Function prototypes */
 int child_one(t_data *data, int *fds, char **envp);
+int child_two(t_data *data, int *fds, char **envp);
 
 #endif
