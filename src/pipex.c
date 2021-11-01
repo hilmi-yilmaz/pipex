@@ -31,7 +31,7 @@ int main(int argc, char **argv, char **envp)
 	pid.one = fork();
 	if (pid.one < 0)
 	{
-		printf("Error forking process (child 1)\n%s\n", strerror(errno));
+		printf("Error forking process (child 1).\n%s\n", strerror(errno));
 		return (RETURN_FAILURE);
 	}
 	/* Child process 1: write to pipe */
@@ -42,12 +42,12 @@ int main(int argc, char **argv, char **envp)
 	pid.two = fork();
 	if (pid.two < 0)
 	{
-		printf("Error forking process (child 2)\n%s\n", strerror(errno));
+		printf("Error forking process (child 2).\n%s\n", strerror(errno));
 		return (RETURN_FAILURE);
 	}
 	if (pid.two == 0)
 		child_two(&data, fds, envp);
-	
+
 	close(fds[0]);
 	close(fds[1]);
 	close(data.file_in);
