@@ -49,13 +49,6 @@ int main(int argc, char **argv, char **envp)
 	/* Child process 1: write to pipe */
 	if (pid.one == 0)
 	{
-		// close(fds[0]);
-		// close(data.file_out);
-		// dup2(fds[1], STDOUT_FILENO);
-		// dup2(data.file_in, STDIN_FILENO);
-		// close(fds[1]);
-		// close(data.file_in);
-		// execve(data.cmd1[0], data.cmd1, envp);
         child_one(&data, fds, envp);
 	}
 

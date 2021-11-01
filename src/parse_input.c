@@ -61,19 +61,30 @@ static int	get_executable(t_data *data, char **cmd)
 	return (RETURN_FAILURE);
 }
 
+static int	open_files(t_data *data, char **argv)
+{
+	data->file_in = open(argv[1], O_RDONLY); // file_in has to already exist
+	if (data->file_in == -1)
+	{
+		printf("%s\n", strerror(errno));
+		return (RETURN_FAILURE);
+	}
+	data->file_out = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0666);
+	if (data->file_out == -1)
+	{
+		printf("%s\n", strerror(errno));
+		return (RETURN_FAILURE);
+	}
+	return (RETURN_SUCCESS);
+}
+
 int	parse_input(t_data *data, char **argv, char **envp)
 {
 	int		ret;
 
 	ret = get_path(data, envp);
 	append_slash_to_path(data);
-	data->file_in = open(argv[1], O_RDONLY); // file_in has to already exist
-	if (data->file_in == -1)
-	{
-		printf("%s\n", strerror(errno));
-		return (4);
-	}
-	data->file_out = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0666);
+	open_files(data, argv);
 	data->cmd1 = ft_split(argv[2], ' ');
 	if (data->cmd1 == NULL)
 		return (RETURN_FAILURE);
