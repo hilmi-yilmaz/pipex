@@ -17,8 +17,6 @@ int main(int argc, char **argv, char **envp)
 	pid_t	pid;
 	t_data	data;
 
-
-	
 	/* Input check */
 	if (check_input(argc))
 		return (-1);
