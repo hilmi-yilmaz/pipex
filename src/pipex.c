@@ -25,7 +25,7 @@ int main(int argc, char **argv, char **envp)
 	ft_bzero(&data, sizeof(data));
 
 	/* Parse data */
-	parse_input(argv, &data);
+	parse_input(&data, argv, envp);
 
 	/* Print data */
 	print_data(data);

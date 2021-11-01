@@ -12,10 +12,29 @@ static int	wrapper_strjoin(char *path, char **cmd)
 	return (RETURN_SUCCESS);
 }
 
-int	parse_input(char **argv, t_data *data)
+static int	find_executable_path(t_data *data, char **envp)
+{
+	int i = 0;
+	while (envp[i] != NULL)
+	{
+		printf("envp[%d] = %s\n", i, envp[i]);
+		if (envp[i][0] == 'P' && envp[i][1] == 'A' && envp[i][2] == 'T' && \
+			envp[i][3] == 'H' && envp[i][4] == '=')
+		{
+			data->path = ft_split(envp[i] + 5, ':');
+			if (data->path == NULL)
+				return (RETURN_FAILURE);
+		}
+		i++;
+	}
+	return (RETURN_SUCCESS);
+}
+
+int	parse_input(t_data *data, char **argv, char **envp)
 {
 	int	ret;
 
+	find_executable_path(data, envp);
 	data->file_in = open(argv[1], O_RDONLY); // file_in has to already exist
 	if (data->file_in == -1)
 	{

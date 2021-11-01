@@ -5,6 +5,7 @@ void	print_data(t_data data)
 	int i;
 	
 	i = 0;
+	printf("---------------------------------");
 	printf("Input  file descripter = %d\n", data.file_in);
 	printf("Output file descriptor = %d\n", data.file_out);
 	printf("cmd1 = ");
@@ -19,6 +20,13 @@ void	print_data(t_data data)
 	while (data.cmd2[i] != NULL)
 	{
 		printf("%s ", data.cmd2[i]);
+		i++;
+	}
+	printf("\npath=");
+	i = 0;
+	while (data.path[i] != NULL)
+	{
+		printf("%s:", data.path[i]);
 		i++;
 	}
 	printf("\n");

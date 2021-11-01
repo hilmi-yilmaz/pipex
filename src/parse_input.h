@@ -13,6 +13,6 @@
 # include "data.h"
 
 /* Function prototypes */
-int	parse_input(char **argv, t_data *data);
+int	parse_input(t_data *data, char **argv, char **envp);
 
 #endif
