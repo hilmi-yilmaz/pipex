@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   parse_input.c                                      :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2021/11/02 12:45:15 by hyilmaz       #+#    #+#                 */
+/*   Updated: 2021/11/02 12:45:18 by hyilmaz       ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "parse_input.h"
 
 /* 
@@ -10,13 +22,13 @@ static int	open_files(t_data *data, char **argv)
 	data->file_in = open(argv[1], O_RDONLY);
 	if (data->file_in == -1)
 	{
-		printf("%s: %s\n", argv[1], strerror(errno));
+		perror("Error opening input file");
 		return (RETURN_FAILURE);
 	}
 	data->file_out = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0666);
 	if (data->file_out == -1)
 	{
-		printf("%s: %s\n", argv[4], strerror(errno));
+		perror("Error opening output file");
 		return (RETURN_FAILURE);
 	}
 	return (RETURN_SUCCESS);
@@ -89,7 +101,8 @@ static int	get_executable(t_data *data, char **cmd)
 		data->path[i] = tmp;
 		i++;
 	}
-	printf("Could not find executable: %s\n", *cmd);
+	//printf("Could not find executable: %s\n", *cmd);
+	perror("Error finding executable");
 	return (RETURN_FAILURE);
 }
 

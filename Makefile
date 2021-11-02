@@ -1,15 +1,27 @@
+# **************************************************************************** #
+#                                                                              #
+#                                                         ::::::::             #
+#    Makefile                                           :+:    :+:             #
+#                                                      +:+                     #
+#    By: hyilmaz <hyilmaz@student.codam.nl>           +#+                      #
+#                                                    +#+                       #
+#    Created: 2021/11/02 12:45:21 by hyilmaz       #+#    #+#                  #
+#    Updated: 2021/11/02 13:33:54 by hyilmaz       ########   odam.nl          #
+#                                                                              #
+# **************************************************************************** #
+
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -g3
 
 SRC_DIR = src
 SRC_FILES = pipex.c \
 			parse_input.c \
-			child_process.c \
+			processes.c \
 			utils.c
 
 HEADER_FILES = 	pipex.h \
 				parse_input.h \
-				child_process.h \
+				processes.h \
 				utils.h
 
 OBJ_DIR = obj
@@ -45,4 +57,3 @@ fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
-	

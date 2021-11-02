@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   pipex.h                                            :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2021/11/02 12:45:12 by hyilmaz       #+#    #+#                 */
+/*   Updated: 2021/11/02 12:45:13 by hyilmaz       ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #ifndef PIPEX_H
 # define PIPEX_H
 
@@ -14,7 +26,7 @@
 # include "libft/libft.h"
 # include "data.h"
 # include "parse_input.h"
+# include "processes.h"
 # include "utils.h"
-# include "child_process.h"
 
 #endif
