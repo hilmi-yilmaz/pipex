@@ -35,9 +35,6 @@
 
 int child_one(t_data *data, int *fds, char **envp)
 {
-	int		i;
-
-	i = 0;
 	close(fds[0]);
 	close(data->file_out);
 	dup2(fds[1], STDOUT_FILENO);

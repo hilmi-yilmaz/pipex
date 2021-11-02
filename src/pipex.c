@@ -10,6 +10,26 @@ static int	check_input(int argc)
 	return (RETURN_SUCCESS);
 }
 
+static void free_str_arr(char **str)
+{
+    int i;
+
+    i = 0;
+    while (str[i] != NULL)
+    {
+        free(str[i]);
+        i++;
+    }
+    free(str);
+}
+
+static void free_data(t_data data)
+{
+    free_str_arr(data.cmd1);
+    free_str_arr(data.cmd2);
+    free_str_arr(data.path);
+}
+
 int main(int argc, char **argv, char **envp)
 {
 	int		ret;
@@ -55,6 +75,8 @@ int main(int argc, char **argv, char **envp)
 
 	waitpid(pid.one, NULL, 0);
 	waitpid(pid.two, NULL, 0);
+
+    free_data(data);
 
 	return (RETURN_SUCCESS);
 }

@@ -80,9 +80,7 @@ static int	open_files(t_data *data, char **argv)
 
 int	parse_input(t_data *data, char **argv, char **envp)
 {
-	int		ret;
-
-	ret = get_path(data, envp);
+	get_path(data, envp);
 	append_slash_to_path(data);
 	open_files(data, argv);
 	data->cmd1 = ft_split(argv[2], ' ');
