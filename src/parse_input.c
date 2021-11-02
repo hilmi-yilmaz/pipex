@@ -1,6 +1,31 @@
 #include "parse_input.h"
 
-static int	get_path(t_data *data, char **envp)
+/* 
+** Open files given as input.
+** file_in is opened (it should already exist).
+** file_out is created or truncated if it already exists.
+*/
+static int	open_files(t_data *data, char **argv)
+{
+	data->file_in = open(argv[1], O_RDONLY);
+	if (data->file_in == -1)
+	{
+		printf("%s: %s\n", argv[1], strerror(errno));
+		return (RETURN_FAILURE);
+	}
+	data->file_out = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0666);
+	if (data->file_out == -1)
+	{
+		printf("%s: %s\n", argv[4], strerror(errno));
+		return (RETURN_FAILURE);
+	}
+	return (RETURN_SUCCESS);
+}
+
+/* Get the PATH variable from the environment and store in data->path using split 
+** If no PATH variable found, return errorcode.
+*/
+static int	get_path_from_environment(t_data *data, char **envp)
 {
 	int i = 0;
 	while (envp[i] != NULL)
@@ -10,13 +35,16 @@ static int	get_path(t_data *data, char **envp)
 			data->path = ft_split(envp[i] + 5, ':');
 			if (data->path == NULL)
 				return (RETURN_FAILURE);
-			break ;
+			return (RETURN_SUCCESS);
 		}
 		i++;
 	}
-	return (RETURN_SUCCESS);
+	return (RETURN_FAILURE);
 }
 
+/*
+** Append slash to all paths so that executable can be appended later.
+ */
 static int	append_slash_to_path(t_data *data)
 {
 	int		i;
@@ -34,6 +62,10 @@ static int	append_slash_to_path(t_data *data)
 	return (0);
 }
 
+/*
+** Loop over path, append executable to it, check whether that exists.
+** If not, continue looking, else save path + executable in *cmd.
+ */
 static int	get_executable(t_data *data, char **cmd)
 {
 	int		i;
@@ -47,7 +79,6 @@ static int	get_executable(t_data *data, char **cmd)
 		data->path[i] = ft_strjoin(data->path[i], *cmd);
 		if (access(data->path[i], F_OK) == 0)
 		{
-			printf("SUCCESS FOUND PATH! = |%s|\n", data->path[i]);
 			free(*cmd);
 			*cmd = ft_strdup(data->path[i]);
 			free(data->path[i]);
@@ -58,42 +89,30 @@ static int	get_executable(t_data *data, char **cmd)
 		data->path[i] = tmp;
 		i++;
 	}
+	printf("Could not find executable: %s\n", *cmd);
 	return (RETURN_FAILURE);
 }
 
-static int	open_files(t_data *data, char **argv)
-{
-	data->file_in = open(argv[1], O_RDONLY); // file_in has to already exist
-	if (data->file_in == -1)
-	{
-		printf("%s\n", strerror(errno));
-		return (RETURN_FAILURE);
-	}
-	data->file_out = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0666);
-	if (data->file_out == -1)
-	{
-		printf("%s\n", strerror(errno));
-		return (RETURN_FAILURE);
-	}
-	return (RETURN_SUCCESS);
-}
-
+/*
+** Parse all input:
+** 1. Open files.
+** 2. Find path variable in environment and append slashes to it.
+** 3. Get the commands and append correct path to it.
+ */
 int	parse_input(t_data *data, char **argv, char **envp)
 {
-	get_path(data, envp);
-	append_slash_to_path(data);
-	open_files(data, argv);
+	if (open_files(data, argv) || get_path_from_environment(data, envp) || \
+		append_slash_to_path(data))
+		return (RETURN_FAILURE);
 	data->cmd1 = ft_split(argv[2], ' ');
 	if (data->cmd1 == NULL)
 		return (RETURN_FAILURE);
-	get_executable(data, &data->cmd1[0]);
-	printf("exec1 = %s\n", data->cmd1[0]);
-
+	if (get_executable(data, &data->cmd1[0]))
+		return (RETURN_FAILURE);
 	data->cmd2 = ft_split(argv[3], ' ');
 	if (data->cmd2 == NULL)
 		return (RETURN_FAILURE);
-	get_executable(data, &data->cmd2[0]);
-	printf("exec2 = %s\n", data->cmd2[0]);
-
+	if (get_executable(data, &data->cmd2[0]))
+		return (RETURN_FAILURE);
 	return (RETURN_SUCCESS);
 }
