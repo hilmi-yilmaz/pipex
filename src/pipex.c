@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:25 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/03 14:51:56 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/03 16:10:34 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,7 @@ int main(int argc, char **argv, char **envp)
 	child_two(&data, fds, &pid, argv, envp);
 	close(fds[0]);
 	close(fds[1]);
-	close(data.file_in);
-	close(data.file_out);
 	waitpid(pid.one, &status, 0);
 	waitpid(pid.two, &status, 0);
-	return (status);
+	return (WEXITSTATUS(status));
 }
