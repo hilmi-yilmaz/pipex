@@ -93,8 +93,26 @@ run_pipex ewa_broer "grep contents" "wc -l" /tmp/file_out_yours
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
 # Test 4: command 1 doesn't exist
+run_bash "< $file_in grep12 contents | wc -l > /tmp/file_out_bash"
+run_pipex "$file_in" "grep12 contents" "wc -l" "/tmp/file_out_yours"
+compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
-# Test 5: test with outputfile without permission(chmod 444 output_file and then run pipex)
+# Test 5: command 2 doesn't exist
+run_bash "< $file_in grep contents | wc12 -l > /tmp/file_out_bash"
+run_pipex "$file_in" "grep contents" "wc12 -l" "/tmp/file_out_yours"
+compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+
+# Test 6: command 1 invalid option
+run_bash "< $file_in grep -Q contents | wc -l > /tmp/file_out_bash"
+run_pipex "$file_in" "grep -Q contents" "wc -l" "/tmp/file_out_yours"
+compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+
+# Test 7: command 2 invalid option
+run_bash "< $file_in grep contents | wc -x > /tmp/file_out_bash"
+run_pipex "$file_in" "grep contents" "wc -x" "/tmp/file_out_yours"
+compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+
+# Test : test with outputfile without permission(chmod 444 output_file and then run pipex)
 touch /tmp/no_permissions
 chmod 444 /tmp/no_permissions
 run_bash "< $file_in grep contents | wc -l > /tmp/no_permissions"

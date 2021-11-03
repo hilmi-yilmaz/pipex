@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:15 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/03 14:50:29 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/03 21:40:16 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -120,12 +120,12 @@ int	parse_input(t_data *data, char **argv, char **envp)
 	data->cmd1 = ft_split(argv[2], ' ');
 	if (data->cmd1 == NULL)
 		return (RETURN_FAILURE);
-	if (get_executable(data, &data->cmd1[0]))
-		return (RETURN_FAILURE);
+	get_executable(data, &data->cmd1[0]);
+		//return (RETURN_FAILURE);
 	data->cmd2 = ft_split(argv[3], ' ');
 	if (data->cmd2 == NULL)
 		return (RETURN_FAILURE);
-	if (get_executable(data, &data->cmd2[0]))
-		return (RETURN_FAILURE);
+	get_executable(data, &data->cmd2[0]);
+		//return (RETURN_FAILURE);
 	return (RETURN_SUCCESS);
 }
