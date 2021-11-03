@@ -6,13 +6,13 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:06 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/02 16:33:25 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/03 15:25:11 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "processes.h"
 
-int child_one(t_data *data, int *fds, t_pids *pid, char **envp)
+int child_one(t_data *data, int *fds, t_pids *pid, char **argv, char **envp)
 {
 	pid->one = fork();
 	if (pid->one < 0)
@@ -23,17 +23,25 @@ int child_one(t_data *data, int *fds, t_pids *pid, char **envp)
 	else if (pid->one == 0)
 	{
 		close(fds[0]);
-		close(data->file_out);
+		data->file_in = open(argv[1], O_RDONLY);
+		if (data->file_in == -1)
+		{
+			perror("Error opening input file");
+			close(fds[1]);
+			exit(RETURN_FAILURE);
+		}
+		
+		//close(data->file_out);
 		dup2(fds[1], STDOUT_FILENO);
 		dup2(data->file_in, STDIN_FILENO);
 		close(fds[1]);
 		close(data->file_in);
 		execve(data->cmd1[0], data->cmd1, envp);
 	}
-	return (RETURN_SUCCESS);
+	return (RETURN_SUCCESS); //parent
 }
 
-int child_two(t_data *data, int *fds, t_pids *pid, char **envp)
+int child_two(t_data *data, int *fds, t_pids *pid, char **argv, char **envp)
 {
 	pid->two = fork();
 	if (pid->two < 0)
@@ -44,12 +52,20 @@ int child_two(t_data *data, int *fds, t_pids *pid, char **envp)
 	else if (pid->two == 0)
 	{
 		close(fds[1]);
-		close(data->file_in);
+		data->file_out = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0666);
+		if (data->file_out == -1)
+		{
+			perror("Error opening output file");
+			close(fds[0]);
+			exit(RETURN_FAILURE);
+		}
+		
+		//close(data->file_in);
 		dup2(fds[0], STDIN_FILENO);
 		dup2(data->file_out, STDOUT_FILENO);
 		close(fds[0]);
 		close(data->file_out);
 		execve(data->cmd2[0], data->cmd2, envp);
 	}
-	return (RETURN_SUCCESS);
+	return (RETURN_SUCCESS); // parent
 }
