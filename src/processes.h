@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:42 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/03 14:52:20 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/06 13:27:04 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
+# include <errno.h>
 
 /* User defined headers */
 # include "libft/libft.h"

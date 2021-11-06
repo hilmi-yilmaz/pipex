@@ -78,43 +78,72 @@ compare_outputs()
 }
 
 # Test 1
+echo "Test 1"
 run_bash "< $file_in grep contents | wc -l > /tmp/file_out_bash"
 run_pipex "$file_in" "grep contents" "wc -l" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
 # Test 2
+echo "Test 2"
 run_bash "< $file_in ls -la | wc -w > /tmp/file_out_bash"
 run_pipex "$file_in" "ls -la" "wc -w" /tmp/file_out_yours
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
 # Test 3: Input file doesn't exists
+echo "Test 3"
 run_bash "< ewa_broer grep contents | wc -l > /tmp/file_out_bash"
 run_pipex ewa_broer "grep contents" "wc -l" /tmp/file_out_yours
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
 # Test 4: command 1 doesn't exist
+echo "Test 4"
 run_bash "< $file_in grep12 contents | wc -l > /tmp/file_out_bash"
 run_pipex "$file_in" "grep12 contents" "wc -l" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
 # Test 5: command 2 doesn't exist
+echo "Test 5"
 run_bash "< $file_in grep contents | wc12 -l > /tmp/file_out_bash"
 run_pipex "$file_in" "grep contents" "wc12 -l" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
 # Test 6: command 1 invalid option
+echo "Test 6"
 run_bash "< $file_in grep -Q contents | wc -l > /tmp/file_out_bash"
 run_pipex "$file_in" "grep -Q contents" "wc -l" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
 # Test 7: command 2 invalid option
+echo "Test 7"
 run_bash "< $file_in grep contents | wc -x > /tmp/file_out_bash"
 run_pipex "$file_in" "grep contents" "wc -x" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
-# Test : test with outputfile without permission(chmod 444 output_file and then run pipex)
+
+# Test 8: Outputfile without write permission
+echo "Test 8"
 touch /tmp/no_permissions
 chmod 444 /tmp/no_permissions
 run_bash "< $file_in grep contents | wc -l > /tmp/no_permissions"
-run_pipex $file_in "grep contents" "wc -l" /tmp/no_permissions
+run_pipex $file_in "grep contents" "wc -l" "/tmp/no_permissions"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/no_permissions" "/tmp/no_permissions"
+
+# Test 9: Input file without read permission.
+echo "Test 9"
+touch /tmp/no_read_permissions
+chmod 333 /tmp/no_read_permissions
+run_bash "< /tmp/no_read_permissions grep contents | wc -l > /tmp/file_out_bash"
+run_pipex "/tmp/no_read_permissions" "grep contents" "wc -l" "/tmp/file_out_yours"
+compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+
+# Test 10: Executable no execute permission
+echo "Test 10"
+run_bash "< $file_in pipex contents | wc -l > /tmp/file_out_bash"
+run_pipex "$file_in" "pipex contents" "wc -l" "/tmp/file_out_yours"
+compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+
+# Test 10: Executable no execute permission
+# echo "Test 11"
+# run_bash "< $file_in grep contents | pipex > /tmp/file_out_bash"
+# run_pipex "$file_in" "grep contents" "pipex" "/tmp/file_out_yours"
+# compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"

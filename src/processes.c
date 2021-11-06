@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:06 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/03 21:42:29 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/06 14:00:16 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,6 +35,7 @@ int child_one(t_data *data, int *fds, t_pids *pid, char **argv, char **envp)
 		close(fds[1]);
 		close(data->file_in);
 		execve(data->cmd1[0], data->cmd1, envp);
+		perror("Error with execve");
 		exit(RETURN_FAILURE);
 	}
 	return (RETURN_SUCCESS); //parent
@@ -63,7 +64,7 @@ int child_two(t_data *data, int *fds, t_pids *pid, char **argv, char **envp)
 		close(fds[0]);
 		close(data->file_out);
 		execve(data->cmd2[0], data->cmd2, envp);
-		perror("errno:");
+		perror("Error with execve");
 		exit(RETURN_FAILURE);
 	}
 	return (RETURN_SUCCESS); // parent
