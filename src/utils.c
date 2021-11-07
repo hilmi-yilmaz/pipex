@@ -6,11 +6,19 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:46 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/02 12:45:46 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/06 16:45:54 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils.h"
+
+int	wrapper_close(int fd)
+{
+	if (close(fd) == 0)
+		return (RETURN_SUCCESS);
+	perror("Error with close");
+	return (RETURN_FAILURE);
+}
 
 void	print_data(t_data data)
 {

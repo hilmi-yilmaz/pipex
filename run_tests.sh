@@ -58,7 +58,7 @@ compare_outputs()
 	# fi
 
 	# # Compare exit status
-	if [[ "$1" == "$2" ]]; then
+	if [[ ("$1" == "0" && "$2" == "0") || ("$1" != "0" && "$2" != "0") ]]; then
 		echo -e "${GREEN}SUCCES${NC}: Exit codes correct (yours="$2" | bash="$1")"
 	else
 		echo -e "${RED}ERROR${NC}: Exit codes differ (yours="$2" | bash="$1")"
@@ -136,10 +136,12 @@ run_bash "< /tmp/no_read_permissions grep contents | wc -l > /tmp/file_out_bash"
 run_pipex "/tmp/no_read_permissions" "grep contents" "wc -l" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
-# Test 10: Executable no execute permission
+# Test 10: Execute pipex itself, inside this directory, should not execute because it is not in PATH
 echo "Test 10"
 run_bash "< $file_in pipex contents | wc -l > /tmp/file_out_bash"
 run_pipex "$file_in" "pipex contents" "wc -l" "/tmp/file_out_yours"
+cat /tmp/file_out_bash
+cat /tmp/file_out_yours
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
 # Test 10: Executable no execute permission

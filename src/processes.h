@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:42 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/06 13:27:04 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/06 14:20:52 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@
 /* User defined headers */
 # include "libft/libft.h"
 # include "data.h"
+# include "utils.h"
 
 /* Function prototypes */
 int child_one(t_data *data, int *fds, t_pids *pid, char **argv, char **envp);

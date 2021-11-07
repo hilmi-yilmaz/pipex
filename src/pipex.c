@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:25 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/03 21:07:15 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/07 14:46:17 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,13 +16,13 @@ static int	check_input(int argc)
 {
 	if (argc != 5)
     {
-       	printf("Error\nWrong amount of arguments. Run as: ./pipex file_in cmd1 cmd2 file_out\n");
-        return (RETURN_FAILURE);
-    }
+		printf("Error\nWrong amount of arguments. Run as: ./pipex file_in cmd1 cmd2 file_out\n");
+		return (RETURN_FAILURE);
+	}
 	return (RETURN_SUCCESS);
 }
 
-int main(int argc, char **argv, char **envp)
+int	main(int argc, char **argv, char **envp)
 {
 	int		fds[2];
 	t_pids  pid;
@@ -38,10 +38,19 @@ int main(int argc, char **argv, char **envp)
 		perror("Error creating pipe:");
 		return (RETURN_FAILURE);
 	}
-    // if (child_one(&data, fds, &pid, envp) || child_two(&data, fds, &pid, envp))
-	// 	return (RETURN_FAILURE);
-	child_one(&data, fds, &pid, argv, envp);
-	child_two(&data, fds, &pid, argv, envp);
+	if (child_one(&data, fds, &pid, argv, envp))
+	{
+		close(fds[0]);
+		close(fds[1]);
+		exit(RETURN_FAILURE);
+	}
+	if (child_two(&data, fds, &pid, argv, envp))
+	{
+		waitpid(pid.one, &status, 0);
+		close(fds[0]);
+		close(fds[1]);
+		exit(RETURN_FAILURE);
+	}
 	close(fds[0]);
 	close(fds[1]);
 	waitpid(pid.one, &status, 0);
