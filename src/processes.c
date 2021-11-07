@@ -6,11 +6,19 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:06 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/07 14:55:52 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/07 15:08:18 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "processes.h"
+
+static void	dup2_error_handling(int	file_1, int file_2)
+{
+	perror("Error with dup2");
+	close(file_1);
+	close(file_2);
+	exit(RETURN_FAILURE);
+}
 
 int child_one(t_data *data, int *fds, t_pids *pid, char **argv, char **envp)
 {
@@ -31,19 +39,9 @@ int child_one(t_data *data, int *fds, t_pids *pid, char **argv, char **envp)
 			exit(RETURN_FAILURE);
 		}
 		if (dup2(fds[1], STDOUT_FILENO) == -1)
-		{
-			perror("Error with dup2");
-			close(data->file_in);
-			close(fds[1]);
-			exit(RETURN_FAILURE);
-		}
+			dup2_error_handling(data->file_in, fds[1]);
 		if (dup2(data->file_in, STDIN_FILENO) == -1)
-		{
-			perror("Error with dup2");
-			close(data->file_in);
-			close(fds[1]);  // fds[1] is now stdout, do they close themselves after process termination?
-			exit(RETURN_FAILURE);	
-		}
+			dup2_error_handling(data->file_in, fds[1]);
 		close(fds[1]);
 		close(data->file_in);
 		execve(data->cmd1[0], data->cmd1, envp);
@@ -72,19 +70,9 @@ int child_two(t_data *data, int *fds, t_pids *pid, char **argv, char **envp)
 			exit(RETURN_FAILURE);
 		}
 		if (dup2(fds[0], STDIN_FILENO) == -1)
-		{
-			perror("Error with dup2");
-			close(data->file_out);
-			close(fds[0]);
-			exit(RETURN_FAILURE);
-		}
+			dup2_error_handling(data->file_out, fds[0]);
 		if (dup2(data->file_out, STDOUT_FILENO) == -1)
-		{
-			perror("Error with dup2");
-			close(data->file_out);
-			close(fds[0]);
-			exit(RETURN_FAILURE);
-		}
+			dup2_error_handling(data->file_out, fds[0]);
 		close(fds[0]);
 		close(data->file_out);
 		execve(data->cmd2[0], data->cmd2, envp);

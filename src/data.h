@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:29 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/06 20:01:32 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/07 16:17:16 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,7 @@
 # define RETURN_FAILURE 1
 # define RETURN_SUCCESS 0
 # define CLOSE_FAILURE 2
+# define MALLOC_FAILURE 3
 
 /* Data structures */
 typedef struct s_data

@@ -6,33 +6,11 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:15 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/03 21:40:16 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/07 16:18:06 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse_input.h"
-
-/* 
-** Open files given as input.
-** file_in is opened (it should already exist).
-** file_out is created or truncated if it already exists.
-*/
-// static int	open_files(t_data *data, char **argv)
-// {
-// 	data->file_in = open(argv[1], O_RDONLY);
-// 	if (data->file_in == -1)
-// 	{
-// 		perror("Error opening input file");
-// 		//return (RETURN_FAILURE);
-// 	}
-// 	data->file_out = open(argv[4], O_CREAT | O_WRONLY | O_TRUNC, 0666);
-// 	if (data->file_out == -1)
-// 	{
-// 		perror("Error opening output file");
-// 		return (RETURN_FAILURE);
-// 	}
-// 	return (RETURN_SUCCESS);
-// }
 
 /* Get the PATH variable from the environment and store in data->path using split 
 ** If no PATH variable found, return errorcode.
@@ -89,6 +67,11 @@ static int	get_executable(t_data *data, char **cmd)
 	{
 		tmp = data->path[i];
 		data->path[i] = ft_strjoin(data->path[i], *cmd);
+		if (data->path[i] == NULL)
+		{
+			perror("Error with malloc");
+			return (MALLOC_FAILURE);
+		}
 		if (access(data->path[i], F_OK) == 0)
 		{
 			free(*cmd);
@@ -101,7 +84,6 @@ static int	get_executable(t_data *data, char **cmd)
 		data->path[i] = tmp;
 		i++;
 	}
-	//printf("Could not find executable: %s\n", *cmd);
 	perror("Error finding executable");
 	return (RETURN_FAILURE);
 }
@@ -120,12 +102,12 @@ int	parse_input(t_data *data, char **argv, char **envp)
 	data->cmd1 = ft_split(argv[2], ' ');
 	if (data->cmd1 == NULL)
 		return (RETURN_FAILURE);
-	get_executable(data, &data->cmd1[0]);
-		//return (RETURN_FAILURE);
+	if (get_executable(data, &data->cmd1[0]) == MALLOC_FAILURE)
+		return (RETURN_FAILURE);
 	data->cmd2 = ft_split(argv[3], ' ');
 	if (data->cmd2 == NULL)
 		return (RETURN_FAILURE);
-	get_executable(data, &data->cmd2[0]);
-		//return (RETURN_FAILURE);
+	if (get_executable(data, &data->cmd2[0]) == MALLOC_FAILURE)
+		return (RETURN_FAILURE);
 	return (RETURN_SUCCESS);
 }
