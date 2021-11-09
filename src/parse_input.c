@@ -6,18 +6,20 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:15 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/09 16:51:35 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/09 18:08:38 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse_input.h"
 
-/* Get the PATH variable from the environment and store in data->path using split 
+/* Get PATH variable from the environment and store in data->path using split 
 ** If no PATH variable found, return errorcode.
 */
 static int	get_path_from_environment(t_data *data, char **envp)
 {
-	int i = 0;
+	int	i;
+
+	i = 0;
 	while (envp[i] != NULL)
 	{
 		if (ft_strncmp(envp[i], "PATH=", 5) == 0)
@@ -70,7 +72,7 @@ static int	check_given_executable_on_slashes(char *cmd)
 /*
 ** Loop over path, append executable to it, check whether that exists.
 ** If not, continue looking, else save path + executable in *cmd.
- */
+*/
 static int	get_executable(t_data *data, char **cmd)
 {
 	int		i;
@@ -106,10 +108,9 @@ static int	get_executable(t_data *data, char **cmd)
 
 /*
 ** Parse all input:
-** 1. Open files.
-** 2. Find path variable in environment and append slashes to it.
-** 3. Get the commands and append correct path to it.
- */
+** 1. Find path variable in environment and append slashes to it.
+** 2. Get the commands and append correct path to it.
+*/
 int	parse_input(t_data *data, char **argv, char **envp)
 {
 	if (get_path_from_environment(data, envp) || \
