@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:06 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/07 15:08:18 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/09 10:52:29 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,11 @@ static void	dup2_error_handling(int	file_1, int file_2)
 	exit(RETURN_FAILURE);
 }
 
+/*
+** The first child process. Executes the first command.
+**
+**
+*/
 int child_one(t_data *data, int *fds, t_pids *pid, char **argv, char **envp)
 {
 	pid->one = fork();
@@ -51,6 +56,11 @@ int child_one(t_data *data, int *fds, t_pids *pid, char **argv, char **envp)
 	return (RETURN_SUCCESS); //parent
 }
 
+/*
+** The second child process. Executes the second command.
+**
+**
+*/
 int child_two(t_data *data, int *fds, t_pids *pid, char **argv, char **envp)
 {
 	pid->two = fork();
