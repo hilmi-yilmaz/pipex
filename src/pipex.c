@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:25 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/07 14:46:17 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/09 11:01:47 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,18 @@ static int	check_input(int argc)
 		return (RETURN_FAILURE);
 	}
 	return (RETURN_SUCCESS);
+}
+
+static void	close_pipe(int *fds)
+{
+	close(fds[0]);
+	close(fds[1]);
+}
+
+static void	close_pipe_and_exit_failure(int *fds)
+{
+	close_pipe(fds);
+	exit(RETURN_FAILURE);
 }
 
 int	main(int argc, char **argv, char **envp)
@@ -39,20 +51,13 @@ int	main(int argc, char **argv, char **envp)
 		return (RETURN_FAILURE);
 	}
 	if (child_one(&data, fds, &pid, argv, envp))
-	{
-		close(fds[0]);
-		close(fds[1]);
-		exit(RETURN_FAILURE);
-	}
+		close_pipe_and_exit_failure(fds);
 	if (child_two(&data, fds, &pid, argv, envp))
 	{
 		waitpid(pid.one, &status, 0);
-		close(fds[0]);
-		close(fds[1]);
-		exit(RETURN_FAILURE);
+		close_pipe_and_exit_failure(fds);
 	}
-	close(fds[0]);
-	close(fds[1]);
+	close_pipe(fds);
 	waitpid(pid.one, &status, 0);
 	waitpid(pid.two, &status, 0);
 	return (WEXITSTATUS(status));

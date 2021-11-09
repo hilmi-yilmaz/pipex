@@ -52,12 +52,7 @@ run_bash()
 # $4: file_out_yours
 compare_outputs()
 {
-	# Check whether file_out exists
-	# if [[ ! -f /tmp/file_out_yours ]]; then
-	# 	echo "Error: file_out not created by pipex."
-	# fi
-
-	# # Compare exit status
+	# Compare exit status
 	if [[ ("$1" == "0" && "$2" == "0") || ("$1" != "0" && "$2" != "0") ]]; then
 		echo -e "${GREEN}SUCCES${NC}: Exit codes correct (yours="$2" | bash="$1")"
 	else
@@ -77,75 +72,107 @@ compare_outputs()
 	echo ""
 }
 
-# Test 1
+# Test 1: Normal test
 echo "Test 1"
 run_bash "< $file_in grep contents | wc -l > /tmp/file_out_bash"
 run_pipex "$file_in" "grep contents" "wc -l" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
-# Test 2
+# Test 2: Test with correct absolute path to first command.
 echo "Test 2"
+run_bash "< $file_in /usr/bin/grep codam | wc -l > /tmp/file_out_bash"
+run_pipex "$file_in" "/usr/bin/grep codam" "wc -l" "/tmp/file_out_yours"
+compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+
+# Test 3: Test with incorrect absolute path to first command.
+echo "Test 3"
+run_bash "< $file_in /bin/grep codam | wc -l > /tmp/file_out_bash"
+run_pipex "$file_in" "/bin/grep codam" "wc -l" "/tmp/file_out_yours"
+compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+
+# Test 4: Test with correct absolute path to second command.
+echo "Test 4"
+run_bash "< $file_in grep codam | /usr/bin/wc -l > /tmp/file_out_bash"
+run_pipex "$file_in" "grep codam" "/usr/bin/wc -l" "/tmp/file_out_yours"
+compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+
+# Test 5: Test with incorrect absolute path to second command.
+echo "Test 5"
+run_bash "< $file_in grep codam | /bin/wc -l > /tmp/file_out_bash"
+run_pipex "$file_in" "grep codam" "/bin/wc -l" "/tmp/file_out_yours"
+compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+
+# Test 6: Test with correct absolute path to first and second command.
+echo "Test 6"
+run_bash "< $file_in /usr/bin/grep codam | /usr/bin/wc -l > /tmp/file_out_bash"
+run_pipex "$file_in" "/usr/bin/grep codam" "/usr/bin/wc -l" "/tmp/file_out_yours"
+compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+
+# Test 7: Test with incorrect absolute path to first and second command.
+echo "Test 7"
+run_bash "< $file_in /bin/grep codam | /bin/wc -l > /tmp/file_out_bash"
+run_pipex "$file_in" "/bin/grep codam" "/bin/wc -l" "/tmp/file_out_yours"
+compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+
+# Test 8: Test with other command than Test 1.
+echo "Test 8"
 run_bash "< $file_in ls -la | wc -w > /tmp/file_out_bash"
 run_pipex "$file_in" "ls -la" "wc -w" /tmp/file_out_yours
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
-# Test 3: Input file doesn't exists
-echo "Test 3"
+# Test 9: Input file doesn't exist.
+echo "Test 9"
 run_bash "< ewa_broer grep contents | wc -l > /tmp/file_out_bash"
 run_pipex ewa_broer "grep contents" "wc -l" /tmp/file_out_yours
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
-# Test 4: command 1 doesn't exist
-echo "Test 4"
+# Test 10: command 1 doesn't exist.
+echo "Test 10"
 run_bash "< $file_in grep12 contents | wc -l > /tmp/file_out_bash"
 run_pipex "$file_in" "grep12 contents" "wc -l" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
-# Test 5: command 2 doesn't exist
-echo "Test 5"
+# Test 11: command 2 doesn't exist.
+echo "Test 11"
 run_bash "< $file_in grep contents | wc12 -l > /tmp/file_out_bash"
 run_pipex "$file_in" "grep contents" "wc12 -l" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
-# Test 6: command 1 invalid option
-echo "Test 6"
-run_bash "< $file_in grep -Q contents | wc -l > /tmp/file_out_bash"
-run_pipex "$file_in" "grep -Q contents" "wc -l" "/tmp/file_out_yours"
+# Test 12: command 1 invalid options.
+echo "Test 12"
+run_bash "< $file_in grep -Q codam | wc -l > /tmp/file_out_bash"
+run_pipex "$file_in" "grep -Q codam" "wc -l" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
-# Test 7: command 2 invalid option
-echo "Test 7"
+# Test 13: command 2 invalid option
+echo "Test 13"
 run_bash "< $file_in grep contents | wc -x > /tmp/file_out_bash"
 run_pipex "$file_in" "grep contents" "wc -x" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
+# Test 14: Outputfile without write permission
+echo "Test 14"
+touch /tmp/no_permissions_bash /tmp/no_permissions_yours
+chmod 444 /tmp/no_permissions_bash 
+chmod 444 /tmp/no_permissions_yours
+run_bash "< $file_in grep contents | wc -l > /tmp/no_permissions_bash"
+run_pipex $file_in "grep contents" "wc -l" "/tmp/no_permissions_yours"
+compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/no_permissions_bash" "/tmp/no_permissions_yours"
 
-# Test 8: Outputfile without write permission
-echo "Test 8"
-touch /tmp/no_permissions
-chmod 444 /tmp/no_permissions
-run_bash "< $file_in grep contents | wc -l > /tmp/no_permissions"
-run_pipex $file_in "grep contents" "wc -l" "/tmp/no_permissions"
-compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/no_permissions" "/tmp/no_permissions"
-
-# Test 9: Input file without read permission.
-echo "Test 9"
+# Test 15: Input file without read permission.
+echo "Test 15"
 touch /tmp/no_read_permissions
 chmod 333 /tmp/no_read_permissions
 run_bash "< /tmp/no_read_permissions grep contents | wc -l > /tmp/file_out_bash"
 run_pipex "/tmp/no_read_permissions" "grep contents" "wc -l" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+rm -f /tmp/no_read_permissions
 
-# Test 10: Execute pipex itself, inside this directory, should not execute because it is not in PATH
-echo "Test 10"
-run_bash "< $file_in pipex contents | wc -l > /tmp/file_out_bash"
-run_pipex "$file_in" "pipex contents" "wc -l" "/tmp/file_out_yours"
-cat /tmp/file_out_bash
-cat /tmp/file_out_yours
+# Test 16: Executable no execute permission
+echo "Test 16"
+cp "pipex" "/Users/hyilmaz/.brew/bin/"
+chmod 444 "/Users/hyilmaz/.brew/bin/pipex" 
+run_bash "< $file_in grep codam | /Users/hyilmaz/.brew/bin/pipex > /tmp/file_out_bash"
+run_pipex "$file_in" "grep codam" "/Users/hyilmaz/.brew/bin/pipex" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
-
-# Test 10: Executable no execute permission
-# echo "Test 11"
-# run_bash "< $file_in grep contents | pipex > /tmp/file_out_bash"
-# run_pipex "$file_in" "grep contents" "pipex" "/tmp/file_out_yours"
-# compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+rm -f "/Users/hyilmaz/.brew/bin/pipex"

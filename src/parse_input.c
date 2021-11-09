@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:15 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/07 16:18:06 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/09 16:51:35 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,21 @@ static int	append_slash_to_path(t_data *data)
 }
 
 /*
+** Checks whether the current executable is given with a path.
+** If so, checking the path.
+** Else, returning executable.
+*/
+static int	check_given_executable_on_slashes(char *cmd)
+{
+	if (ft_strchr(cmd, '/') != NULL)
+	{
+		if (access(cmd, F_OK) == 0)
+			return (RETURN_FAILURE);
+	}
+	return (RETURN_SUCCESS);
+}
+
+/*
 ** Loop over path, append executable to it, check whether that exists.
 ** If not, continue looking, else save path + executable in *cmd.
  */
@@ -63,6 +78,8 @@ static int	get_executable(t_data *data, char **cmd)
 
 	i = 0;
 	tmp = NULL;
+	if (check_given_executable_on_slashes(*cmd))
+		return (RETURN_SUCCESS);
 	while (data->path[i] != NULL)
 	{
 		tmp = data->path[i];
@@ -84,7 +101,6 @@ static int	get_executable(t_data *data, char **cmd)
 		data->path[i] = tmp;
 		i++;
 	}
-	perror("Error finding executable");
 	return (RETURN_FAILURE);
 }
 
