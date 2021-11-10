@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:29 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/07 16:17:16 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/10 18:09:44 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,8 +27,7 @@ typedef struct s_data
 {
 	int		file_in;
 	int		file_out;
-	char	**cmd1;
-	char	**cmd2;
+	char	***commands; // [[cmd1], [cmd2], ... , NULL] --> [["ls", "la"], ["grep", "file_in"], ... , NULL]
 	char	**path;
 }				t_data;
 

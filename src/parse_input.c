@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:15 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/09 18:08:38 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/10 13:25:08 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -111,20 +111,40 @@ static int	get_executable(t_data *data, char **cmd)
 ** 1. Find path variable in environment and append slashes to it.
 ** 2. Get the commands and append correct path to it.
 */
-int	parse_input(t_data *data, char **argv, char **envp)
+int	parse_input(t_data *data, int argc, char **argv, char **envp)
 {
+	int	i;
+	int	num_commands;
+	
+	i = 0;
+	num_commands = argc - 3;
 	if (get_path_from_environment(data, envp) || \
 		append_slash_to_path(data))
 		return (RETURN_FAILURE);
-	data->cmd1 = ft_split(argv[2], ' ');
-	if (data->cmd1 == NULL)
+	data->commands = malloc(sizeof(*data->commands) * (num_commands + 1));
+	if (data->commands == NULL)
 		return (RETURN_FAILURE);
-	if (get_executable(data, &data->cmd1[0]) == MALLOC_FAILURE)
-		return (RETURN_FAILURE);
-	data->cmd2 = ft_split(argv[3], ' ');
-	if (data->cmd2 == NULL)
-		return (RETURN_FAILURE);
-	if (get_executable(data, &data->cmd2[0]) == MALLOC_FAILURE)
-		return (RETURN_FAILURE);
+	data->commands[num_commands] = NULL;
+	while (i < num_commands)
+	{
+		data->commands[i] = ft_split(argv[i + 2], ' ');
+		if (data->commands[i] == NULL)
+			return (RETURN_FAILURE);
+		if (get_executable(data, &data->commands[i][0]) == MALLOC_FAILURE)
+			return (RETURN_FAILURE);
+		i++;
+	}
+	// data->cmd1 = ft_split(argv[2], ' ');
+	// if (data->cmd1 == NULL)
+	// 	return (RETURN_FAILURE);
+	// if (get_executable(data, &data->cmd1[0]) == MALLOC_FAILURE)
+	// 	return (RETURN_FAILURE);
+
+	// data->cmd2 = ft_split(argv[3], ' ');
+	// if (data->cmd2 == NULL)
+	// 	return (RETURN_FAILURE);
+	// if (get_executable(data, &data->cmd2[0]) == MALLOC_FAILURE)
+	// 	return (RETURN_FAILURE);
+
 	return (RETURN_SUCCESS);
 }

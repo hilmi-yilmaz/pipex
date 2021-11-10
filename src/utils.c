@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:46 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/06 16:45:54 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/10 13:28:37 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,6 +20,19 @@ int	wrapper_close(int fd)
 	return (RETURN_FAILURE);
 }
 
+void	print_str_array(char **str)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] != NULL)
+	{
+		printf("%s ", str[i]);
+		i++;
+	}
+	printf("\n");
+}
+
 void	print_data(t_data data)
 {
 	int i;
@@ -28,26 +41,19 @@ void	print_data(t_data data)
 	printf("---------------------------------\n");
 	printf("Input  file descripter = %d\n", data.file_in);
 	printf("Output file descriptor = %d\n", data.file_out);
-	printf("cmd1 (%s) = ", data.cmd1[0]);
-	while (data.cmd1[i] != NULL)
+
+	while (data.commands[i] != NULL)
 	{
-		printf("%s ", data.cmd1[i]);
+		print_str_array(data.commands[i]);
 		i++;
 	}
-	printf("\n");
-	printf("cmd2 (%s) = ", data.cmd2[0]);
-	i = 0;
-	while (data.cmd2[i] != NULL)
-	{
-		printf("%s ", data.cmd2[i]);
-		i++;
-	}
-	printf("\npath=\n");
-	i = 0;
-	while (data.path[i] != NULL)
-	{
-		printf("%s\n", data.path[i]);
-		i++;
-	}
+
+	// printf("\npath=\n");
+	// i = 0;
+	// while (data.path[i] != NULL)
+	// {
+	// 	printf("%s\n", data.path[i]);
+	// 	i++;
+	// }
 	printf("\n");
 }

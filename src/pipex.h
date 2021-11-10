@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:12 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/02 12:45:13 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/10 13:29:22 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,6 +15,7 @@
 
 /* System headers */
 # include <stdio.h>
+# include <stdlib.h>
 # include <unistd.h>
 # include <string.h>
 # include <errno.h>

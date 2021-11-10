@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:34 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/02 12:45:35 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/10 13:29:45 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,6 @@
 # include "data.h"
 
 /* Function prototypes */
-int	parse_input(t_data *data, char **argv, char **envp);
+int	parse_input(t_data *data, int argc, char **argv, char **envp);
 
 #endif
