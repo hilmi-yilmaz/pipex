@@ -6,13 +6,14 @@
 #    By: hyilmaz <hyilmaz@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/11/02 12:45:21 by hyilmaz       #+#    #+#                  #
-#    Updated: 2021/11/02 13:33:54 by hyilmaz       ########   odam.nl          #
+#    Updated: 2021/11/10 13:09:03 by hyilmaz       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror -g3
 
+# Mandatory
 SRC_DIR = src
 SRC_FILES = pipex.c \
 			parse_input.c \
@@ -27,11 +28,14 @@ HEADER_FILES = 	pipex.h \
 OBJ_DIR = obj
 OBJ_FILES = $(SRC_FILES:%.c=$(OBJ_DIR)/%.o)
 
+# Libft
 LIBFT_DIR = $(SRC_DIR)/libft
 LIBFT = libft.a
 
+# Set VPATH to look into src directory
 VPATH = src
 
+# Program name
 NAME = pipex
 
 all: $(OBJ_DIR) $(LIBFT) $(NAME)
@@ -57,3 +61,5 @@ fclean: clean
 	rm -f $(NAME)
 
 re: fclean all
+
+.PHONY: all clean fclean re bonus

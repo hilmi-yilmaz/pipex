@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:25 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/09 11:01:47 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/10 11:27:08 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,7 @@ int	main(int argc, char **argv, char **envp)
 		return (RETURN_FAILURE);
 	if (pipe(fds) == -1)
 	{
-		perror("Error creating pipe:");
+		perror("Error creating pipe");
 		return (RETURN_FAILURE);
 	}
 	if (child_one(&data, fds, &pid, argv, envp))
