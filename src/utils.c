@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:46 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/10 13:28:37 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/15 17:27:06 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,8 @@ void	print_data(t_data data)
 	
 	i = 0;
 	printf("---------------------------------\n");
-	printf("Input  file descripter = %d\n", data.file_in);
-	printf("Output file descriptor = %d\n", data.file_out);
+	printf("Input  file descripter = %s\n", data.file_in_name);
+	printf("Output file descriptor = %s\n", data.file_out_name);
 
 	while (data.commands[i] != NULL)
 	{

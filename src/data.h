@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:29 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/10 18:09:44 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/15 17:23:15 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,16 +25,11 @@
 /* Data structures */
 typedef struct s_data
 {
-	int		file_in;
-	int		file_out;
+	char	*file_in_name;
+	char	*file_out_name;
 	char	***commands; // [[cmd1], [cmd2], ... , NULL] --> [["ls", "la"], ["grep", "file_in"], ... , NULL]
 	char	**path;
+	int		fds[2];
 }				t_data;
-
-typedef struct s_pids
-{
-	pid_t	one;
-	pid_t	two;
-}				t_pids;
 
 #endif

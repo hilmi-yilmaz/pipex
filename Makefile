@@ -6,7 +6,7 @@
 #    By: hyilmaz <hyilmaz@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/11/02 12:45:21 by hyilmaz       #+#    #+#                  #
-#    Updated: 2021/11/10 13:09:03 by hyilmaz       ########   odam.nl          #
+#    Updated: 2021/11/15 12:06:31 by hyilmaz       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,7 @@ CFLAGS = -Wall -Wextra -Werror -g3
 
 # Mandatory
 SRC_DIR = src
-SRC_FILES = pipex.c \
+SRC_FILES = pipex_bonus.c \
 			parse_input.c \
 			processes.c \
 			utils.c

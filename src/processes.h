@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:42 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/10 16:55:50 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/15 18:35:05 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,10 +26,12 @@
 # include "utils.h"
 
 /* Function prototypes */
-int child_one(t_data *data, int *fds, t_pids *pid, char **argv, char **envp);
-int child_two(t_data *data, int *fds, t_pids *pid, char **argv, char **envp);
-int a(t_data *data, int *pid,int fd0,char *argv,char **envp, int fds1, int (func)(char *), int x, int y, int a);
+int first_child(t_data *data, char **envp, int i);
+int last_child(t_data *data, char **envp, int read_end_pipe, int i, int *last_pid);
+//int a(t_data *data, int *pid,int fd0,char *argv,char **envp, int fds1, int (func)(char *), int x, int y, int a);
 int	input_file(char *argv);
 int	output_file(char *argv);
+
+int middle_child(t_data *data, char **envp, int read_end_pipe, int i);
 
 #endif

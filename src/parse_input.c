@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:15 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/10 13:25:08 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/15 17:21:15 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,17 +134,7 @@ int	parse_input(t_data *data, int argc, char **argv, char **envp)
 			return (RETURN_FAILURE);
 		i++;
 	}
-	// data->cmd1 = ft_split(argv[2], ' ');
-	// if (data->cmd1 == NULL)
-	// 	return (RETURN_FAILURE);
-	// if (get_executable(data, &data->cmd1[0]) == MALLOC_FAILURE)
-	// 	return (RETURN_FAILURE);
-
-	// data->cmd2 = ft_split(argv[3], ' ');
-	// if (data->cmd2 == NULL)
-	// 	return (RETURN_FAILURE);
-	// if (get_executable(data, &data->cmd2[0]) == MALLOC_FAILURE)
-	// 	return (RETURN_FAILURE);
-
+	data->file_in_name = ft_strdup(argv[1]);
+	data->file_out_name = ft_strdup(argv[argc - 1]);
 	return (RETURN_SUCCESS);
 }

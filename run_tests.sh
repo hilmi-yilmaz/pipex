@@ -169,10 +169,16 @@ compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/
 rm -f /tmp/no_read_permissions
 
 # Test 16: Executable no execute permission
-echo "Test 16: Executable no execute permission."
-cp "pipex" "/Users/hyilmaz/.brew/bin/"
-chmod 444 "/Users/hyilmaz/.brew/bin/pipex" 
-run_bash "< $file_in grep codam | /Users/hyilmaz/.brew/bin/pipex > /tmp/file_out_bash"
-run_pipex "$file_in" "grep codam" "/Users/hyilmaz/.brew/bin/pipex" "/tmp/file_out_yours"
+# echo "Test 16: Executable no execute permission."
+# cp "pipex" "/Users/hyilmaz/.brew/bin/"
+# chmod 444 "/Users/hyilmaz/.brew/bin/pipex" 
+# run_bash "< $file_in grep codam | /Users/hyilmaz/.brew/bin/pipex > /tmp/file_out_bash"
+# run_pipex "$file_in" "grep codam" "/Users/hyilmaz/.brew/bin/pipex" "/tmp/file_out_yours"
+# compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+# rm -f "/Users/hyilmaz/.brew/bin/pipex"
+
+# Test 17
+echo "Test 17: Using pipe but not needed."
+run_bash "< $file_in ls -l | grep codam $file_in > /tmp/file_out_bash"
+run_pipex "$file_in" "ls -l" "grep codam $file_in" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
-rm -f "/Users/hyilmaz/.brew/bin/pipex"
