@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:15 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/16 17:49:06 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/16 17:54:31 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,7 @@ static int	check_given_executable_on_slashes(char *cmd)
 ** Loop over path, append executable to it, check whether that exists.
 ** If not, continue looking, else save path + executable in *cmd.
 */
-static int	get_executable(t_data *data, char **cmd)
+static int	get_executable_with_full_path(t_data *data, char **cmd)
 {
 	int		i;
 	char	*tmp;
@@ -113,12 +113,13 @@ static int	get_executable(t_data *data, char **cmd)
 	return (RETURN_FAILURE);
 }
 
-static int	handle_input_empty_string(t_data *data, int i)
+static char	**handle_input_empty_string(t_data *data, int i)
 {
-	data->commands[i] = ft_calloc(2, sizeof(*data->commands[i]));
-	data->commands[i][0] = ft_strdup("/");
-	data->commands[i][1] = NULL;
-	return (0);
+	char	**single_command;
+	
+	single_command = ft_calloc(2, sizeof(*data->commands[i]));
+	single_command[0] = ft_strdup("/");
+	return (single_command);
 }
 
 /*
@@ -145,10 +146,10 @@ int	parse_input(t_data *data, int argc, char **argv, char **envp)
 		if (argv[i + 2][0] != '\0')
 			data->commands[i] = ft_split(argv[i + 2], ' ');
 		else
-			handle_input_empty_string(data, i);
+			data->commands[i] = handle_input_empty_string(data, i);
 		if (data->commands[i] == NULL)
 			return (RETURN_FAILURE);
-		if (get_executable(data, &data->commands[i][0]) == MALLOC_FAILURE)
+		if (get_executable_with_full_path(data, &data->commands[i][0]) == MALLOC_FAILURE)
 			return (RETURN_FAILURE);
 		i++;
 	}
