@@ -14,7 +14,7 @@
 
 static int	check_input(int argc)
 {
-	if (argc < 5)
+	if (argc != 5)
     {
 		printf("Error\nWrong amount of arguments. Run as: ./pipex file_in cmd1 cmd2 file_out\n");
 		return (RETURN_FAILURE);
@@ -22,58 +22,56 @@ static int	check_input(int argc)
 	return (RETURN_SUCCESS);
 }
 
-static void	close_pipe(int *fds)
+static int	wait_and_get_last_exit_status(int last_process_pid)
 {
-	close(fds[0]);
-	close(fds[1]);
-}
+	int	pid;
+	int	last_process_status;
+	int	status;
 
-static void	close_pipe_and_exit_failure(int *fds)
-{
-	close_pipe(fds);
-	exit(RETURN_FAILURE);
+	pid = 1;
+	last_process_status = 0;
+	while (pid > 0)
+	{
+		pid = wait(&status);
+		if (pid == last_process_pid)
+		{
+			if (WIFEXITED(status))
+				last_process_status = WEXITSTATUS(status);
+		}
+	}
+	return (last_process_status);
 }
-
-// static void	set_process(t_process *process, int read_from, int write_to, int file_in, int file_out)
-// {
-// 	process->read_from = read_from;
-// 	process->write_to = write_to;
-// 	process->file_in = file_in;
-// 	process->file_out = file_out;
-// }
 
 int	main(int argc, char **argv, char **envp)
 {
-	int			fds[2];
-	t_pids  	pid;
+	int			i;
+	int			num_commands;
+	int			read_end_pipe;
+	int			last_process_pid;
 	t_data		data;
-	int			status;
 
+	i = 0;
+	num_commands = argc - 3;
+	read_end_pipe = -1;
 	ft_bzero(&data, sizeof(data));
-	ft_bzero(&pid, sizeof(pid));
-	//ft_memset(&process, -1, sizeof(process));
 	if (check_input(argc) || parse_input(&data, argc, argv, envp))
 		return (RETURN_FAILURE);
-	if (pipe(fds) == -1)
+	while (i < num_commands)
 	{
-		perror("Error creating pipe");
-		return (RETURN_FAILURE);
+		if (pipe(data.fds) == -1)
+		{
+			perror("Error creating pipe");
+			return (RETURN_FAILURE);
+		}
+		if (i == 0)
+			first_child(&data, envp, i);
+		else
+			last_child(&data, envp, read_end_pipe, i, &last_process_pid);
+		read_end_pipe = data.fds[0];
+		close(data.fds[1]);
+		i++;
 	}
-	if (child_one(&data, fds, &pid, argv, envp))
-		close_pipe_and_exit_failure(fds);
-	if (child_two(&data, fds, &pid, argv, envp))
-	{
-		waitpid(pid.one, &status, 0);
-		close_pipe_and_exit_failure(fds);
-	}
-	
-	// if (a(&data,&pid.one,fds[0],argv[1],envp,fds[1], input_file,STDOUT_FILENO,STDIN_FILENO, 0))
-	// 	close_pipe_and_exit_failure(fds);
-	// if (a(&data,&pid.two,fds[1],argv[4],envp,fds[0], output_file,STDIN_FILENO,STDOUT_FILENO, 1))
-	// 	close_pipe_and_exit_failure(fds);
-		
-	close_pipe(fds);
-	waitpid(pid.one, &status, 0);
-	waitpid(pid.two, &status, 0);
-	return (WEXITSTATUS(status));
+	close(data.fds[0]);
+	//free_data
+	return (wait_and_get_last_exit_status(last_process_pid));
 }

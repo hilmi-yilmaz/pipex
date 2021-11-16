@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:29 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/15 17:23:15 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/16 11:54:05 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,5 +31,11 @@ typedef struct s_data
 	char	**path;
 	int		fds[2];
 }				t_data;
+
+typedef struct s_pids
+{
+	pid_t	one;
+	pid_t	two;
+}				t_pids;
 
 #endif

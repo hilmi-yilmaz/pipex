@@ -42,18 +42,6 @@ static int	wait_and_get_last_exit_status(int last_process_pid)
 	return (last_process_status);
 }
 
-// static void	close_pipe(int *fds)
-// {
-// 	close(fds[0]);
-// 	close(fds[1]);
-// }
-
-// static void	close_pipe_and_exit_failure(int *fds)
-// {
-// 	close_pipe(fds);
-// 	exit(RETURN_FAILURE);
-// }
-
 int	main(int argc, char **argv, char **envp)
 {
 	int			i;

@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:06 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/15 18:34:53 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/16 13:00:56 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,30 +57,6 @@ static int	wrapper_fork()
 // 	}
 // 	return (file);
 // }
-
-int middle_child(t_data *data, char **envp, int read_end_pipe, int i)
-{
-	int	pid;
-
-	pid = wrapper_fork();
-	if (pid == 0)
-	{
-		if (dup2(data->fds[1], STDOUT_FILENO) == -1)
-		{
-			printf("HAndle this error.\n");
-		}
-		if (dup2(read_end_pipe, STDIN_FILENO) == -1)
-		{
-			printf("HAndle this error.\n");
-		}
-		close(data->fds[1]);
-		close(read_end_pipe);
-		execve(data->commands[i][0], data->commands[i], envp);
-		perror("Error with execve");
-		exit(RETURN_FAILURE);
-	}
-	return (RETURN_SUCCESS);
-}
 
 int first_child(t_data *data, char **envp, int i)
 {

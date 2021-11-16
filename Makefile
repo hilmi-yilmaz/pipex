@@ -6,19 +6,25 @@
 #    By: hyilmaz <hyilmaz@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/11/02 12:45:21 by hyilmaz       #+#    #+#                  #
-#    Updated: 2021/11/15 12:06:31 by hyilmaz       ########   odam.nl          #
+#    Updated: 2021/11/16 12:33:14 by hyilmaz       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g3
+CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
+
+ifdef BONUS
+SRC_FILES_EXTRA = pipex_bonus.c processes_bonus.c
+else
+SRC_FILES_EXTRA = pipex.c processes.c
+endif
 
 # Mandatory
 SRC_DIR = src
-SRC_FILES = pipex_bonus.c \
-			parse_input.c \
-			processes.c \
+SRC_FILES = parse_input.c \
 			utils.c
+
+SRC_FILES := $(SRC_FILES) $(SRC_FILES_EXTRA)
 
 HEADER_FILES = 	pipex.h \
 				parse_input.h \
@@ -51,6 +57,9 @@ $(NAME): $(OBJ_FILES)
 
 $(OBJ_FILES): $(OBJ_DIR)/%.o: %.c $(HEADER_FILES)
 	$(CC) $(CFLAGS) -c $< -o $@
+
+bonus:
+	$(MAKE) BONUS=1 all
 
 clean:
 	make clean -C $(LIBFT_DIR)

@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:15 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/15 17:21:15 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/16 13:40:38 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,10 +62,7 @@ static int	append_slash_to_path(t_data *data)
 static int	check_given_executable_on_slashes(char *cmd)
 {
 	if (ft_strchr(cmd, '/') != NULL)
-	{
-		if (access(cmd, F_OK) == 0)
-			return (RETURN_FAILURE);
-	}
+		return (RETURN_FAILURE);
 	return (RETURN_SUCCESS);
 }
 
@@ -79,6 +76,11 @@ static int	get_executable(t_data *data, char **cmd)
 	char	*tmp;
 
 	i = 0;
+	if (*cmd == NULL)
+	{
+		*cmd = ft_strdup(data->path[0]);
+		return (RETURN_SUCCESS);
+	}
 	tmp = NULL;
 	if (check_given_executable_on_slashes(*cmd))
 		return (RETURN_SUCCESS);
@@ -94,7 +96,7 @@ static int	get_executable(t_data *data, char **cmd)
 		if (access(data->path[i], F_OK) == 0)
 		{
 			free(*cmd);
-			*cmd = ft_strdup(data->path[i]);
+			*cmd = ft_strdup(data->path[i]); // check malloc
 			free(data->path[i]);
 			data->path[i] = tmp;
 			return (RETURN_SUCCESS);
