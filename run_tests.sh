@@ -177,7 +177,7 @@ rm -f /tmp/no_read_permissions
 # compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 # rm -f "/Users/hyilmaz/.brew/bin/pipex"
 
-# Test 17
+# Test 17: Using pipe but not needed.
 echo "Test 17: Using pipe but not needed."
 run_bash "< $file_in ls -l | grep codam $file_in > /tmp/file_out_bash"
 run_pipex "$file_in" "ls -l" "grep codam $file_in" "/tmp/file_out_yours"

@@ -25,23 +25,16 @@ static int	check_input(int argc)
 static int	wait_and_get_last_exit_status(int last_process_pid)
 {
 	int	pid;
-	int	status;
 	int	last_process_status;
+	int	status;
 
 	pid = 1;
 	last_process_status = 0;
-	printf("last_process_pid = %d\n", last_process_pid);
 	while (pid > 0)
 	{
 		pid = wait(&status);
-		if (pid == -1)
-		{
-			perror("Error waiting for process");
-			exit(RETURN_FAILURE);
-		}
 		if (pid == last_process_pid)
 		{
-			printf("last process pid = %d\n", pid);
 			if (WIFEXITED(status))
 				last_process_status = WEXITSTATUS(status);
 		}
@@ -67,9 +60,7 @@ int	main(int argc, char **argv, char **envp)
 	int			num_commands;
 	int			read_end_pipe;
 	int			last_process_pid;
-	int			last_process_status;
 	t_data		data;
-	// int			status;
 
 	i = 0;
 	num_commands = argc - 3;
@@ -79,7 +70,6 @@ int	main(int argc, char **argv, char **envp)
 		return (RETURN_FAILURE);
 	while (i < num_commands)
 	{
-		// create pipe
 		if (pipe(data.fds) == -1)
 		{
 			perror("Error creating pipe");
@@ -96,14 +86,5 @@ int	main(int argc, char **argv, char **envp)
 		i++;
 	}
 	close(data.fds[0]);
-	// int	pid;
-	// int	last_status;
-	// while ((pid = wait(&status)) > 0)
-	// {
-	// 	if (pid == last_pid)
-	// 		last_status = status;
-	// }
-	//printf("pid1 = %d\n", pid1);
-	last_process_status = wait_and_get_last_exit_status(last_process_pid);
-	return (last_process_status);
+	return (wait_and_get_last_exit_status(last_process_pid));
 }
