@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:15 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/16 13:40:38 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/16 17:49:06 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,6 +66,11 @@ static int	check_given_executable_on_slashes(char *cmd)
 	return (RETURN_SUCCESS);
 }
 
+// static int	handle_null_for_command(char **cmd)
+// {
+// 	cmd = 
+// }
+
 /*
 ** Loop over path, append executable to it, check whether that exists.
 ** If not, continue looking, else save path + executable in *cmd.
@@ -108,6 +113,14 @@ static int	get_executable(t_data *data, char **cmd)
 	return (RETURN_FAILURE);
 }
 
+static int	handle_input_empty_string(t_data *data, int i)
+{
+	data->commands[i] = ft_calloc(2, sizeof(*data->commands[i]));
+	data->commands[i][0] = ft_strdup("/");
+	data->commands[i][1] = NULL;
+	return (0);
+}
+
 /*
 ** Parse all input:
 ** 1. Find path variable in environment and append slashes to it.
@@ -123,13 +136,16 @@ int	parse_input(t_data *data, int argc, char **argv, char **envp)
 	if (get_path_from_environment(data, envp) || \
 		append_slash_to_path(data))
 		return (RETURN_FAILURE);
-	data->commands = malloc(sizeof(*data->commands) * (num_commands + 1));
+	data->commands = ft_calloc(num_commands + 1, sizeof(*data->commands));
 	if (data->commands == NULL)
 		return (RETURN_FAILURE);
-	data->commands[num_commands] = NULL;
+	data->commands[num_commands] = NULL; // not needed with calloc
 	while (i < num_commands)
 	{
-		data->commands[i] = ft_split(argv[i + 2], ' ');
+		if (argv[i + 2][0] != '\0')
+			data->commands[i] = ft_split(argv[i + 2], ' ');
+		else
+			handle_input_empty_string(data, i);
 		if (data->commands[i] == NULL)
 			return (RETURN_FAILURE);
 		if (get_executable(data, &data->commands[i][0]) == MALLOC_FAILURE)

@@ -42,36 +42,43 @@ static int	wait_and_get_last_exit_status(int last_process_pid)
 	return (last_process_status);
 }
 
-int	main(int argc, char **argv, char **envp)
+static int	execute_commands(t_data data, int num_commands, char **envp, int *last_process_pid)
 {
 	int			i;
-	int			num_commands;
 	int			read_end_pipe;
-	int			last_process_pid;
-	t_data		data;
 
 	i = 0;
-	num_commands = argc - 3;
 	read_end_pipe = -1;
-	ft_bzero(&data, sizeof(data));
-	if (check_input(argc) || parse_input(&data, argc, argv, envp))
-		return (RETURN_FAILURE);
 	while (i < num_commands)
 	{
-		if (pipe(data.fds) == -1)
-		{
-			perror("Error creating pipe");
-			return (RETURN_FAILURE);
-		}
+		if (i != num_commands - 1)
+			if (wrapper_pipe(data.fds) == -1)
+				return (RETURN_FAILURE);
 		if (i == 0)
 			first_child(&data, envp, i);
 		else
-			last_child(&data, envp, read_end_pipe, i, &last_process_pid);
+			last_child(&data, envp, read_end_pipe, i, last_process_pid);
 		read_end_pipe = data.fds[0];
 		close(data.fds[1]);
 		i++;
 	}
 	close(data.fds[0]);
-	//free_data
+	return (RETURN_SUCCESS);
+}
+
+int	main(int argc, char **argv, char **envp)
+{
+	int			num_commands;
+	int			last_process_pid;
+	t_data		data;
+
+	//print_str_array(argv);
+	num_commands = argc - 3;
+	ft_bzero(&data, sizeof(data));
+	if (check_input(argc) || parse_input(&data, argc, argv, envp))
+		return (RETURN_FAILURE);
+	//print_data(data, num_commands);
+	execute_commands(data, num_commands, envp, &last_process_pid);
+	free_data(data, num_commands);
 	return (wait_and_get_last_exit_status(last_process_pid));
 }

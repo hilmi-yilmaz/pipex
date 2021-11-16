@@ -73,7 +73,7 @@ compare_outputs()
 }
 
 # Test 1: Normal test
-echo "Test 1: ./pipex \"$file_in\" \"grep contents\" \"wc -l\" \"/tmp/file_out_yours\""
+echo "Test 1: Normal test"
 run_bash "< $file_in grep contents | wc -l > /tmp/file_out_bash"
 run_pipex "$file_in" "grep contents" "wc -l" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
@@ -169,13 +169,13 @@ compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/
 rm -f /tmp/no_read_permissions
 
 # Test 16: Executable no execute permission
-# echo "Test 16: Executable no execute permission."
-# cp "pipex" "/Users/hyilmaz/.brew/bin/"
-# chmod 444 "/Users/hyilmaz/.brew/bin/pipex" 
-# run_bash "< $file_in grep codam | /Users/hyilmaz/.brew/bin/pipex > /tmp/file_out_bash"
-# run_pipex "$file_in" "grep codam" "/Users/hyilmaz/.brew/bin/pipex" "/tmp/file_out_yours"
-# compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
-# rm -f "/Users/hyilmaz/.brew/bin/pipex"
+echo "Test 16: Executable no execute permission."
+cp "pipex" "/Users/hyilmaz/.brew/bin/"
+chmod 444 "/Users/hyilmaz/.brew/bin/pipex" 
+run_bash "< $file_in grep codam | /Users/hyilmaz/.brew/bin/pipex > /tmp/file_out_bash"
+run_pipex "$file_in" "grep codam" "/Users/hyilmaz/.brew/bin/pipex" "/tmp/file_out_yours"
+compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+rm -f "/Users/hyilmaz/.brew/bin/pipex"
 
 # Test 17: Using pipe but not needed.
 echo "Test 17: Using pipe but not needed."
@@ -184,50 +184,49 @@ run_pipex "$file_in" "ls -l" "grep codam $file_in" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
 # Test 18: Empty input command 1
-echo "Test 18: Empty inputs"
+echo "Test 18: Empty input command 1"
 run_bash "< $file_in \"\" | wc -l > /tmp/file_out_bash"
 run_pipex "$file_in" "" "wc -l" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
 # Test 19: Empty input command 2
-echo "Test 19: Empty inputs"
+echo "Test 19: Empty input command 2"
 run_bash "< $file_in ls -la | \"\" > /tmp/file_out_bash"
 run_pipex "$file_in" "ls -la" "" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
 # Test 20: Empty input file 1
-echo "Test 20: Empty inputs"
+echo "Test 20: Empty input file 1"
 run_bash "< \"\" ls -la | wc -l > /tmp/file_out_bash"
 run_pipex "" "ls -la" "wc -l" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
 # Test 21: Empty input file 2
-echo "Test 21: Empty inputs"
+echo "Test 21: Empty input file 2 (NOTE: this test gives error comparing the output files, because both don't exist. Don't stress this is oke)"
 run_bash "< $file_in ls -la | wc -l > \"\""
 run_pipex "$file_in" "ls -la" "wc -l" ""
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
-# NOTE: this test gives error comparing the output files, because both don't exist.
 
 # Test 22: Incorrect relative path command 1
-echo "Test 1: Incorrect relative path command 1"
+echo "Test 22: Incorrect relative path command 1"
 run_bash "< $file_in ../../../../usr/bin/grep codam | wc -l > /tmp/file_out_bash"
 run_pipex "$file_in" "../../../../usr/bin/grep codam" "wc -l" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
 # Test 23: Correct relative path command 1
-echo "Test 1: Correct relative path command 1"
+echo "Test 23: Correct relative path command 1"
 run_bash "< $file_in ../../../../../usr/bin/grep codam | wc -l > /tmp/file_out_bash"
 run_pipex "$file_in" "../../../../../usr/bin/grep codam" "wc -l" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
 # Test 24: Incorrect relative path command 2
-echo "Test 1: Incorrect relative path command 2"
+echo "Test 24: Incorrect relative path command 2"
 run_bash "< $file_in grep codam | ../../../../usr/bin/wc -l > /tmp/file_out_bash"
 run_pipex "$file_in" "grep codam" "../../../../usr/bin/wc -l" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
 # Test 25: Correct relative path command 2
-echo "Test 1: Correct relative path command 2"
+echo "Test 25: Correct relative path command 2"
 run_bash "< $file_in grep codam | ../../../../../usr/bin/wc -l > /tmp/file_out_bash"
 run_pipex "$file_in" "grep codam" "../../../../../usr/bin/wc -l" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
