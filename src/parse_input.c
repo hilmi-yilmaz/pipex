@@ -1,18 +1,19 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   parse_input.c                                      :+:    :+:            */
+/*   parse_input_v1.c                                   :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:15 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/16 17:54:31 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/17 15:02:16 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse_input.h"
 
-/* Get PATH variable from the environment and store in data->path using split 
+/* 
+** Get PATH variable from the environment and store in data->path using split.
 ** If no PATH variable found, return errorcode.
 */
 static int	get_path_from_environment(t_data *data, char **envp)
@@ -35,23 +36,20 @@ static int	get_path_from_environment(t_data *data, char **envp)
 }
 
 /*
-** Append slash to all paths so that executable can be appended later.
- */
-static int	append_slash_to_path(t_data *data)
+** Append slash in front of the command.
+*/
+static int	append_slash_in_front_of_command(char **command)
 {
-	int		i;
 	char	*tmp;
 
-	i = 0;
-	tmp = NULL;
-	while (data->path[i] != NULL)
+	tmp = *command;
+	*command = ft_strjoin("/", *command);
+	if (command == NULL)
 	{
-		tmp = data->path[i];
-		data->path[i] = ft_strjoin(data->path[i], "/");
-		free(tmp);
-		i++;
+		return (RETURN_FAILURE);
 	}
-	return (0);
+	free(tmp);
+	return (RETURN_SUCCESS);
 }
 
 /*
@@ -59,17 +57,15 @@ static int	append_slash_to_path(t_data *data)
 ** If so, checking the path.
 ** Else, returning executable.
 */
+
 static int	check_given_executable_on_slashes(char *cmd)
 {
+	if (cmd == NULL)
+		return (RETURN_SUCCESS);
 	if (ft_strchr(cmd, '/') != NULL)
 		return (RETURN_FAILURE);
 	return (RETURN_SUCCESS);
 }
-
-// static int	handle_null_for_command(char **cmd)
-// {
-// 	cmd = 
-// }
 
 /*
 ** Loop over path, append executable to it, check whether that exists.
@@ -81,14 +77,7 @@ static int	get_executable_with_full_path(t_data *data, char **cmd)
 	char	*tmp;
 
 	i = 0;
-	if (*cmd == NULL)
-	{
-		*cmd = ft_strdup(data->path[0]);
-		return (RETURN_SUCCESS);
-	}
 	tmp = NULL;
-	if (check_given_executable_on_slashes(*cmd))
-		return (RETURN_SUCCESS);
 	while (data->path[i] != NULL)
 	{
 		tmp = data->path[i];
@@ -113,47 +102,109 @@ static int	get_executable_with_full_path(t_data *data, char **cmd)
 	return (RETURN_FAILURE);
 }
 
-static char	**handle_input_empty_string(t_data *data, int i)
+/*
+** Returns a 2D array containing: [str, NULL] 
+** to handle exceptional inputs like only-spaces-string
+** or empty-string.
+*/
+
+static char	**handle_exceptional_inputs(char *str)
 {
 	char	**single_command;
 	
-	single_command = ft_calloc(2, sizeof(*data->commands[i]));
-	single_command[0] = ft_strdup("/");
+	single_command = ft_calloc(2, sizeof(*single_command));
+	if (single_command == NULL)
+		return (NULL);
+	single_command[0] = ft_strdup(str);
+	if (single_command[0] == NULL)
+		return (NULL);
 	return (single_command);
 }
 
 /*
-** Parse all input:
-** 1. Find path variable in environment and append slashes to it.
-** 2. Get the commands and append correct path to it.
+** Get the filesnames with strdup.
+** Including error handling.
 */
-int	parse_input(t_data *data, int argc, char **argv, char **envp)
+
+static int	get_filenames(t_data *data, int argc, char **argv)
 {
+	data->file_in_name = ft_strdup(argv[1]);
+	if (data->file_in_name == NULL)
+	{
+		perror("Error with malloc");
+		return (RETURN_FAILURE);
+	}
+	data->file_out_name = ft_strdup(argv[argc - 1]);
+	if (data->file_out_name == NULL)
+	{
+		perror("Error with malloc");
+		return (RETURN_FAILURE);
+	}
+	return (RETURN_SUCCESS);
+}
+
+/*
+** Get the commands from the command line and save in 2D array.
+** If input is empty string "", then command is like this ["/", NULL].
+*/
+
+static int	get_commands_from_argv(t_data *data, char **argv, int i)
+{
+	if (argv[i + 2][0] == '\0')
+		data->commands[i] = handle_exceptional_inputs("/");
+	else if (str_all_same_chars(argv[i + 2], ' ') == 0)
+		data->commands[i] = handle_exceptional_inputs(argv[i + 2]);
+	else
+		data->commands[i] = ft_split(argv[i + 2], ' ');
+	if (data->commands[i] == NULL)
+	{
+		perror("Error with malloc");
+		//free_all data before in 3d array
+		return (RETURN_FAILURE);
+	}
+	return (RETURN_SUCCESS);
+}
+
+/*
+** Parse the input from the command line.
+** Step 1: Get the filenames.
+** Step 2: Create a 3D array to store the commands and its options.
+** Step 3: Check given executable on slashes.
+** Step 4: Append slashes in front of commands.
+** Step 5: Get the PATH variable from the environment.
+** Step 6: Loop over the PATH variable and get the correct path for the command.
+** If input is empty string "", then command is like this ["/", NULL].
+*/
+
+int	parse_input_v1(t_data *data, int argc, char **argv, char **envp)
+{	
 	int	i;
 	int	num_commands;
-	
+
 	i = 0;
 	num_commands = argc - 3;
-	if (get_path_from_environment(data, envp) || \
-		append_slash_to_path(data))
+	if (get_filenames(data, argc, argv))
 		return (RETURN_FAILURE);
 	data->commands = ft_calloc(num_commands + 1, sizeof(*data->commands));
 	if (data->commands == NULL)
 		return (RETURN_FAILURE);
-	data->commands[num_commands] = NULL; // not needed with calloc
 	while (i < num_commands)
 	{
-		if (argv[i + 2][0] != '\0')
-			data->commands[i] = ft_split(argv[i + 2], ' ');
-		else
-			data->commands[i] = handle_input_empty_string(data, i);
-		if (data->commands[i] == NULL)
+		if (get_commands_from_argv(data, argv, i))
 			return (RETURN_FAILURE);
-		if (get_executable_with_full_path(data, &data->commands[i][0]) == MALLOC_FAILURE)
-			return (RETURN_FAILURE);
+		if (check_given_executable_on_slashes(data->commands[i][0]))
+		{
+			i++;
+			continue ;
+		}
+		if (data->path == NULL)
+		{
+			get_path_from_environment(data, envp);
+			// handle problem with no path in environment
+		}
+		append_slash_in_front_of_command(&data->commands[i][0]);
+		get_executable_with_full_path(data, &data->commands[i][0]);
 		i++;
 	}
-	data->file_in_name = ft_strdup(argv[1]);
-	data->file_out_name = ft_strdup(argv[argc - 1]);
 	return (RETURN_SUCCESS);
 }

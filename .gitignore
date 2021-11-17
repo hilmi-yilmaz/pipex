@@ -4,3 +4,4 @@ file_in
 file_out
 .vscode/
 bonus_src/
+.gdb_history

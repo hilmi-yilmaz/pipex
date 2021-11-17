@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:46 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/16 17:49:21 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/17 14:38:24 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,20 @@ int	wrapper_pipe(int *fds)
 	{
 		perror("Error creating pipe");
 		return (RETURN_FAILURE);
+	}
+	return (RETURN_SUCCESS);
+}
+
+int	str_all_same_chars(char *str, char c)
+{
+	int	i;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		if (str[i] != c)
+			return (RETURN_FAILURE);
+		i++;
 	}
 	return (RETURN_SUCCESS);
 }

@@ -42,7 +42,7 @@ run_pipex()
 # $1 whole command to execute
 run_bash()
 {
-	zsh -c "$1"
+	bash -c "$1"
 	exit_status_bash="$?"
 }
 
@@ -201,11 +201,13 @@ run_bash "< \"\" ls -la | wc -l > /tmp/file_out_bash"
 run_pipex "" "ls -la" "wc -l" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
-# Test 21: Empty input file 2
-echo "Test 21: Empty input file 2 (NOTE: this test gives error comparing the output files, because both don't exist. Don't stress this is oke)"
-run_bash "< $file_in ls -la | wc -l > \"\""
-run_pipex "$file_in" "ls -la" "wc -l" ""
-compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+# # Test 21: Empty input file 2
+# echo "Test 21: Empty input file 2 (NOTE: this test gives error comparing the output files, because both don't exist. Don't stress this is oke)"
+# run_bash "< $file_in ls -la | wc -l > \"\""
+# cat "" > /tmp/file_out_bash
+# run_pipex "$file_in" "ls -la" "wc -l" ""
+# cat "" > /tmp/file_out_yours
+# compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
 # Test 22: Incorrect relative path command 1
 echo "Test 22: Incorrect relative path command 1"
@@ -229,4 +231,30 @@ compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/
 echo "Test 25: Correct relative path command 2"
 run_bash "< $file_in grep codam | ../../../../../usr/bin/wc -l > /tmp/file_out_bash"
 run_pipex "$file_in" "grep codam" "../../../../../usr/bin/wc -l" "/tmp/file_out_yours"
+compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+
+# Test 26: Test with spaces as commands
+echo "Test 26: Test with spaces for command 1"
+run_bash "< $file_in \"  \" | wc -l > /tmp/file_out_bash"
+run_pipex "$file_in" "  " "wc -l" "/tmp/file_out_yours"
+compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+
+# Test 27: Test with spaces as commands
+echo "Test 27: Test with spaces for command 2"
+run_bash "< $file_in ls -la | \"  \" > /tmp/file_out_bash"
+run_pipex "$file_in" "ls -la" "  " "/tmp/file_out_yours"
+compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+
+# Test 28: Test with spaces as input file
+echo "Test 28: Test with spaces as input file"
+run_bash "< \"  \" grep codam | wc -l > /tmp/file_out_bash"
+run_pipex "  " "grep codam" "wc -l" "/tmp/file_out_yours"
+compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+
+# Test 29: Test with spaces as output file
+echo "Test 28: Test with spaces as input file"
+run_bash "< $file_in grep codam | wc -l > \"  \""
+cat "  " > /tmp/file_out_bash
+run_pipex "$file_in" "grep codam" "wc -l" "  "
+cat "  " > /tmp/file_out_yours
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"

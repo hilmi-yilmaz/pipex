@@ -6,12 +6,16 @@
 #    By: hyilmaz <hyilmaz@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/11/02 12:45:21 by hyilmaz       #+#    #+#                  #
-#    Updated: 2021/11/16 12:33:14 by hyilmaz       ########   odam.nl          #
+#    Updated: 2021/11/17 15:04:16 by hyilmaz       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 CC = gcc
-CFLAGS = -Wall -Wextra -Werror -g3 -fsanitize=address
+CFLAGS = -Wall -Wextra -Werror
+
+ifdef DEBUG
+CFLAGS := $(CFLAGS) -g
+endif
 
 ifdef BONUS
 SRC_FILES_EXTRA = pipex_bonus.c processes_bonus.c
