@@ -6,7 +6,7 @@
 #    By: hyilmaz <hyilmaz@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/11/02 12:45:21 by hyilmaz       #+#    #+#                  #
-#    Updated: 2021/11/17 15:04:16 by hyilmaz       ########   odam.nl          #
+#    Updated: 2021/11/20 13:26:49 by hyilmaz       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -14,7 +14,7 @@ CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 
 ifdef DEBUG
-CFLAGS := $(CFLAGS) -g
+CFLAGS := $(CFLAGS) -g -fsanitize=address
 endif
 
 ifdef BONUS
@@ -26,14 +26,16 @@ endif
 # Mandatory
 SRC_DIR = src
 SRC_FILES = parse_input.c \
-			utils.c
+			utils.c \
+			free_data.c
 
 SRC_FILES := $(SRC_FILES) $(SRC_FILES_EXTRA)
 
 HEADER_FILES = 	pipex.h \
 				parse_input.h \
 				processes.h \
-				utils.h
+				utils.h \
+				free_data.h
 
 OBJ_DIR = obj
 OBJ_FILES = $(SRC_FILES:%.c=$(OBJ_DIR)/%.o)

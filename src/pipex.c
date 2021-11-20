@@ -72,13 +72,11 @@ int	main(int argc, char **argv, char **envp)
 	int			last_process_pid;
 	t_data		data;
 
-	//print_str_array(argv);
 	num_commands = argc - 3;
 	ft_bzero(&data, sizeof(data));
-	if (check_input(argc) || parse_input_v1(&data, argc, argv, envp))
+	if (check_input(argc) || parse_input(&data, argc, argv, envp))
 		return (RETURN_FAILURE);
-	//print_data(data, num_commands);
 	execute_commands(data, num_commands, envp, &last_process_pid);
-	free_data(data, num_commands);
+	free_all(data, num_commands);
 	return (wait_and_get_last_exit_status(last_process_pid));
 }

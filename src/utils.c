@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:46 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/17 14:38:24 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/17 15:13:38 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,32 +42,6 @@ int	str_all_same_chars(char *str, char c)
 		i++;
 	}
 	return (RETURN_SUCCESS);
-}
-
-void	free_data(t_data data, int num_commands)
-{
-	int	i;
-	int	j;
-
-	i = 0;
-	j = 0;
-	free(data.file_in_name);
-	free(data.file_out_name);
-	while (i < num_commands)
-	{
-		if (data.commands[i] == NULL)
-		{
-			i++;
-			continue ;
-		}
-		while (data.commands[i][j] != NULL)
-		{
-			free(data.commands[i][j]);
-			j++;
-		}
-		j = 0;
-		i++;
-	}
 }
 
 void	print_str_array(char **str)

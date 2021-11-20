@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   parse_input_v1.c                                   :+:    :+:            */
+/*   parse_input.c                                      :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:15 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/17 15:02:16 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/20 13:36:13 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,8 +62,6 @@ static int	check_given_executable_on_slashes(char *cmd)
 {
 	if (cmd == NULL)
 		return (RETURN_SUCCESS);
-	if (ft_strchr(cmd, '/') != NULL)
-		return (RETURN_FAILURE);
 	return (RETURN_SUCCESS);
 }
 
@@ -176,7 +174,7 @@ static int	get_commands_from_argv(t_data *data, char **argv, int i)
 ** If input is empty string "", then command is like this ["/", NULL].
 */
 
-int	parse_input_v1(t_data *data, int argc, char **argv, char **envp)
+int	parse_input(t_data *data, int argc, char **argv, char **envp)
 {	
 	int	i;
 	int	num_commands;

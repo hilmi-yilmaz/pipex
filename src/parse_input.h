@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:34 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/17 14:35:06 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/17 15:07:47 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,5 @@
 
 /* Function prototypes */
 int	parse_input(t_data *data, int argc, char **argv, char **envp);
-int	parse_input_v1(t_data *data, int argc, char **argv, char **envp);
 
 #endif
