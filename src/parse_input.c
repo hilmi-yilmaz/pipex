@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:15 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/20 13:36:13 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/20 14:05:06 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,6 +62,8 @@ static int	check_given_executable_on_slashes(char *cmd)
 {
 	if (cmd == NULL)
 		return (RETURN_SUCCESS);
+	if (ft_strchr(cmd, '/') != NULL)
+		return (RETURN_FAILURE);
 	return (RETURN_SUCCESS);
 }
 

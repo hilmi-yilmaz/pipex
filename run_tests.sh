@@ -68,7 +68,10 @@ compare_outputs()
 	fi
 
 	# Delete created files
-	rm -f "$3" "$4"
+	if [[ -f "$3" && -f "$4" ]]; then
+		rm -f "$3" "$4"
+	fi
+
 	echo ""
 }
 
@@ -252,9 +255,22 @@ run_pipex "  " "grep codam" "wc -l" "/tmp/file_out_yours"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
 # Test 29: Test with spaces as output file
-echo "Test 28: Test with spaces as input file"
+echo "Test 29: Test with spaces as output file"
 run_bash "< $file_in grep codam | wc -l > \"  \""
 cat "  " > /tmp/file_out_bash
 run_pipex "$file_in" "grep codam" "wc -l" "  "
 cat "  " > /tmp/file_out_yours
+rm -f "  "
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+
+# Test 30: Input file is directory
+echo "Test 30: Input file is directory"
+run_bash "< \".\" grep codam | wc -l > /tmp/file_out_bash"
+run_pipex "." "grep codam" "wc -l" "/tmp/file_out_yours"
+compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+
+# Test 31: Output file is directory
+echo "Test 31: Output file is directory"
+run_bash "< $file_in grep codam | wc -l > /tmp/"
+run_pipex "$file_in" "grep codam" "wc -l" "/tmp/"
+compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/" "/tmp/"

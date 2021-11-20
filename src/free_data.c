@@ -32,6 +32,8 @@ static void	free_path(t_data data)
 	int	i;
 
 	i = 0;
+	if (data.path == NULL)
+		return ;
 	while (data.path[i] != NULL)
 	{
 		free(data.path[i]);
