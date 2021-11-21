@@ -6,7 +6,7 @@
 #    By: hyilmaz <hyilmaz@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/11/02 12:45:21 by hyilmaz       #+#    #+#                  #
-#    Updated: 2021/11/20 13:26:49 by hyilmaz       ########   odam.nl          #
+#    Updated: 2021/11/21 21:07:20 by hyilmaz       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
@@ -27,7 +27,9 @@ endif
 SRC_DIR = src
 SRC_FILES = parse_input.c \
 			utils.c \
-			free_data.c
+			get_filenames.c \
+			free_data.c \
+			print_data.c
 
 SRC_FILES := $(SRC_FILES) $(SRC_FILES_EXTRA)
 
@@ -35,7 +37,9 @@ HEADER_FILES = 	pipex.h \
 				parse_input.h \
 				processes.h \
 				utils.h \
-				free_data.h
+				get_filenames.h \
+				free_data.h \
+				print_data.h
 
 OBJ_DIR = obj
 OBJ_FILES = $(SRC_FILES:%.c=$(OBJ_DIR)/%.o)
@@ -63,6 +67,9 @@ $(NAME): $(OBJ_FILES)
 
 $(OBJ_FILES): $(OBJ_DIR)/%.o: %.c $(HEADER_FILES)
 	$(CC) $(CFLAGS) -c $< -o $@
+
+debug:
+	$(MAKE) DEBUG=1 re
 
 bonus:
 	$(MAKE) BONUS=1 all

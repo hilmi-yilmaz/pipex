@@ -276,3 +276,10 @@ run_pipex "$file_in" "grep codam" "wc -l" "/tmp/"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/" "/tmp/"
 
 # Test 32: No PATH variable
+tmp_path="$PATH"
+unset PATH
+echo "Test 32: No PATH variable. NOTE: output files are not created. So red is good."
+run_bash "< $file_in grep contents | wc -l > /tmp/file_out_bash"
+run_pipex "$file_in" "grep contents" "wc -l" "/tmp/file_out_yours"
+export PATH="$tmp_path"
+compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"

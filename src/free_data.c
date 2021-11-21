@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/21 14:11:32 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/21 14:11:47 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/21 20:58:55 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ static void	free_commands(t_data data, int num_commands)
 		return ;
 	while (i < num_commands)
 	{
-		while (data.commands[i][j] != NULL)
+		while (data.commands[i] != NULL && data.commands[i][j] != NULL)
 		{
 			free(data.commands[i][j]);
 			j++;

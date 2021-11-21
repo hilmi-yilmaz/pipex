@@ -6,33 +6,11 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:15 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/21 14:16:02 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/21 21:05:05 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse_input.h"
-
-/*
-** Get the filesnames with strdup.
-** Including error handling.
-*/
-
-static int	get_filenames(t_data *data, int argc, char **argv)
-{
-	data->file_in_name = ft_strdup(argv[1]);
-	if (data->file_in_name == NULL)
-	{
-		perror("Error with malloc");
-		return (RETURN_FAILURE);
-	}
-	data->file_out_name = ft_strdup(argv[argc - 1]);
-	if (data->file_out_name == NULL)
-	{
-		perror("Error with malloc");
-		return (RETURN_FAILURE);
-	}
-	return (RETURN_SUCCESS);
-}
 
 /*
 ** Returns a 2D array containing: [str, NULL] 
@@ -170,6 +148,30 @@ static int	get_executable_with_full_path(t_data *data, char **cmd)
 	return (RETURN_SUCCESS);
 }
 
+static int	get_commands(t_data *data, char **argv, char **envp, int *i)
+{
+	if (get_commands_from_argv(data, argv, *i))
+		return (RETURN_FAILURE);
+	if (check_given_executable_on_slashes(data->commands[*i][0]))
+	{
+		*i = *i + 1;
+		return (RETURN_SUCCESS + 2);
+	}
+	if (data->path == NULL)
+	{
+		if (get_path_from_environment(data, envp))
+		{
+			ft_putstr_fd("Error\nNo PATH variable in environment.\n", STDOUT_FILENO);
+			return (RETURN_FAILURE);
+		}
+	}
+	if (append_slash_in_front_of_command(&data->commands[*i][0]))
+		return (RETURN_FAILURE);
+	if (get_executable_with_full_path(data, &data->commands[*i][0]))
+		return (RETURN_FAILURE);
+	return (RETURN_SUCCESS);
+}
+
 /*
 ** Parse the input from the command line.
 ** Step 1: Get the filenames.
@@ -184,9 +186,11 @@ static int	get_executable_with_full_path(t_data *data, char **cmd)
 int	parse_input(t_data *data, int argc, char **argv, char **envp)
 {	
 	int	i;
+	int	ret;
 	int	num_commands;
 
 	i = 0;
+	ret = 0;
 	num_commands = argc - 3;
 	if (get_filenames(data, argc, argv))
 		return (RETURN_FAILURE);
@@ -195,24 +199,10 @@ int	parse_input(t_data *data, int argc, char **argv, char **envp)
 		return (RETURN_FAILURE);
 	while (i < num_commands)
 	{
-		if (get_commands_from_argv(data, argv, i))
-			return (RETURN_FAILURE);
-		if (check_given_executable_on_slashes(data->commands[i][0]))
-		{
-			i++;
+		ret = get_commands(data, argv, envp, &i);
+		if (ret == RETURN_SUCCESS + 2)
 			continue ;
-		}
-		if (data->path == NULL)
-		{
-			if (get_path_from_environment(data, envp))
-			{
-				ft_putstr_fd("Error\nNo PATH variable in environment\n", STDOUT_FILENO);
-				return (RETURN_FAILURE);
-			}
-		}
-		if (append_slash_in_front_of_command(&data->commands[i][0]))
-			return (RETURN_FAILURE);
-		if (get_executable_with_full_path(data, &data->commands[i][0]))
+		else if (ret == RETURN_FAILURE)
 			return (RETURN_FAILURE);
 		i++;
 	}
