@@ -6,11 +6,88 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:15 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/20 14:05:06 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/21 14:16:02 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "parse_input.h"
+
+/*
+** Get the filesnames with strdup.
+** Including error handling.
+*/
+
+static int	get_filenames(t_data *data, int argc, char **argv)
+{
+	data->file_in_name = ft_strdup(argv[1]);
+	if (data->file_in_name == NULL)
+	{
+		perror("Error with malloc");
+		return (RETURN_FAILURE);
+	}
+	data->file_out_name = ft_strdup(argv[argc - 1]);
+	if (data->file_out_name == NULL)
+	{
+		perror("Error with malloc");
+		return (RETURN_FAILURE);
+	}
+	return (RETURN_SUCCESS);
+}
+
+/*
+** Returns a 2D array containing: [str, NULL] 
+** to handle exceptional inputs like only-spaces-string
+** or empty-string.
+*/
+
+static char	**handle_exceptional_inputs(char *str)
+{
+	char	**single_command;
+
+	single_command = ft_calloc(2, sizeof(*single_command));
+	if (single_command == NULL)
+		return (NULL);
+	single_command[0] = ft_strdup(str);
+	if (single_command[0] == NULL)
+		return (NULL);
+	return (single_command);
+}
+
+/*
+** Get the commands from the command line and save in 2D array.
+** If input is empty string "", then command is like this ["/", NULL].
+*/
+
+static int	get_commands_from_argv(t_data *data, char **argv, int i)
+{
+	if (argv[i + 2][0] == '\0')
+		data->commands[i] = handle_exceptional_inputs("/");
+	else if (str_all_same_chars(argv[i + 2], ' ') == 0)
+		data->commands[i] = handle_exceptional_inputs(argv[i + 2]);
+	else
+		data->commands[i] = ft_split(argv[i + 2], ' ');
+	if (data->commands[i] == NULL)
+	{
+		perror("Error with malloc");
+		return (RETURN_FAILURE);
+	}
+	return (RETURN_SUCCESS);
+}
+
+/*
+** Checks whether the current executable is given with a path.
+** If so, checking the path.
+** Else, returning executable.
+*/
+
+static int	check_given_executable_on_slashes(char *cmd)
+{
+	if (cmd == NULL)
+		return (RETURN_SUCCESS);
+	if (ft_strchr(cmd, '/') != NULL)
+		return (RETURN_FAILURE);
+	return (RETURN_SUCCESS);
+}
 
 /* 
 ** Get PATH variable from the environment and store in data->path using split.
@@ -46,24 +123,10 @@ static int	append_slash_in_front_of_command(char **command)
 	*command = ft_strjoin("/", *command);
 	if (command == NULL)
 	{
+		perror("Error with malloc");
 		return (RETURN_FAILURE);
 	}
 	free(tmp);
-	return (RETURN_SUCCESS);
-}
-
-/*
-** Checks whether the current executable is given with a path.
-** If so, checking the path.
-** Else, returning executable.
-*/
-
-static int	check_given_executable_on_slashes(char *cmd)
-{
-	if (cmd == NULL)
-		return (RETURN_SUCCESS);
-	if (ft_strchr(cmd, '/') != NULL)
-		return (RETURN_FAILURE);
 	return (RETURN_SUCCESS);
 }
 
@@ -87,10 +150,15 @@ static int	get_executable_with_full_path(t_data *data, char **cmd)
 			perror("Error with malloc");
 			return (MALLOC_FAILURE);
 		}
-		if (access(data->path[i], F_OK) == 0)
+		if (access(data->path[i], X_OK) == 0)
 		{
 			free(*cmd);
-			*cmd = ft_strdup(data->path[i]); // check malloc
+			*cmd = ft_strdup(data->path[i]);
+			if (*cmd == NULL)
+			{
+				perror("Error with malloc");
+				return (RETURN_FAILURE);
+			}
 			free(data->path[i]);
 			data->path[i] = tmp;
 			return (RETURN_SUCCESS);
@@ -98,69 +166,6 @@ static int	get_executable_with_full_path(t_data *data, char **cmd)
 		free(data->path[i]);
 		data->path[i] = tmp;
 		i++;
-	}
-	return (RETURN_FAILURE);
-}
-
-/*
-** Returns a 2D array containing: [str, NULL] 
-** to handle exceptional inputs like only-spaces-string
-** or empty-string.
-*/
-
-static char	**handle_exceptional_inputs(char *str)
-{
-	char	**single_command;
-	
-	single_command = ft_calloc(2, sizeof(*single_command));
-	if (single_command == NULL)
-		return (NULL);
-	single_command[0] = ft_strdup(str);
-	if (single_command[0] == NULL)
-		return (NULL);
-	return (single_command);
-}
-
-/*
-** Get the filesnames with strdup.
-** Including error handling.
-*/
-
-static int	get_filenames(t_data *data, int argc, char **argv)
-{
-	data->file_in_name = ft_strdup(argv[1]);
-	if (data->file_in_name == NULL)
-	{
-		perror("Error with malloc");
-		return (RETURN_FAILURE);
-	}
-	data->file_out_name = ft_strdup(argv[argc - 1]);
-	if (data->file_out_name == NULL)
-	{
-		perror("Error with malloc");
-		return (RETURN_FAILURE);
-	}
-	return (RETURN_SUCCESS);
-}
-
-/*
-** Get the commands from the command line and save in 2D array.
-** If input is empty string "", then command is like this ["/", NULL].
-*/
-
-static int	get_commands_from_argv(t_data *data, char **argv, int i)
-{
-	if (argv[i + 2][0] == '\0')
-		data->commands[i] = handle_exceptional_inputs("/");
-	else if (str_all_same_chars(argv[i + 2], ' ') == 0)
-		data->commands[i] = handle_exceptional_inputs(argv[i + 2]);
-	else
-		data->commands[i] = ft_split(argv[i + 2], ' ');
-	if (data->commands[i] == NULL)
-	{
-		perror("Error with malloc");
-		//free_all data before in 3d array
-		return (RETURN_FAILURE);
 	}
 	return (RETURN_SUCCESS);
 }
@@ -199,11 +204,16 @@ int	parse_input(t_data *data, int argc, char **argv, char **envp)
 		}
 		if (data->path == NULL)
 		{
-			get_path_from_environment(data, envp);
-			// handle problem with no path in environment
+			if (get_path_from_environment(data, envp))
+			{
+				ft_putstr_fd("Error\nNo PATH variable in environment\n", STDOUT_FILENO);
+				return (RETURN_FAILURE);
+			}
 		}
-		append_slash_in_front_of_command(&data->commands[i][0]);
-		get_executable_with_full_path(data, &data->commands[i][0]);
+		if (append_slash_in_front_of_command(&data->commands[i][0]))
+			return (RETURN_FAILURE);
+		if (get_executable_with_full_path(data, &data->commands[i][0]))
+			return (RETURN_FAILURE);
 		i++;
 	}
 	return (RETURN_SUCCESS);

@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        ::::::::            */
+/*   free_data.c                                        :+:    :+:            */
+/*                                                     +:+                    */
+/*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
+/*                                                   +#+                      */
+/*   Created: 2021/11/21 14:11:32 by hyilmaz       #+#    #+#                 */
+/*   Updated: 2021/11/21 14:11:47 by hyilmaz       ########   odam.nl         */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "free_data.h"
 
 static void	free_file_names(t_data data)
@@ -13,6 +25,8 @@ static void	free_commands(t_data data, int num_commands)
 
 	i = 0;
 	j = 0;
+	if (data.commands == NULL)
+		return ;
 	while (i < num_commands)
 	{
 		while (data.commands[i][j] != NULL)

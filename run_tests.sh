@@ -274,3 +274,5 @@ echo "Test 31: Output file is directory"
 run_bash "< $file_in grep codam | wc -l > /tmp/"
 run_pipex "$file_in" "grep codam" "wc -l" "/tmp/"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/" "/tmp/"
+
+# Test 32: No PATH variable

@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:29 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/16 11:54:05 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/21 14:14:58 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,22 @@
 # define MALLOC_FAILURE 3
 
 /* Data structures */
+
+/*
+** Data struct:
+** - file_in_name and file_out_name are filenames given through command line.
+** - commands looks like:
+** -->	[[cmd1], [cmd2], ... , NULL]
+** -->	[["ls", "la"], ["grep", "file_in"], ... , NULL]
+** - path is the environment variable path.
+** - fds holds both ends of the pipe.
+*/
+
 typedef struct s_data
 {
 	char	*file_in_name;
 	char	*file_out_name;
-	char	***commands; // [[cmd1], [cmd2], ... , NULL] --> [["ls", "la"], ["grep", "file_in"], ... , NULL]
+	char	***commands;
 	char	**path;
 	int		fds[2];
 }				t_data;
