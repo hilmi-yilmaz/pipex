@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/22 14:56:59 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/22 15:17:31 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/23 00:21:42 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ int	check_input(int argc)
 	if (argc < 5)
 	{
 		ft_putstr_fd("Error\nWrong amount of arguments. \
-Run as: ./pipex file_in cmd[1] cmd[2] ... cmd[n] file_out", STDOUT_FILENO);
+Run as: ./pipex file_in cmd[1] cmd[2] ... cmd[n] file_out\n", STDOUT_FILENO);
 		return (RETURN_FAILURE);
 	}
 	return (RETURN_SUCCESS);

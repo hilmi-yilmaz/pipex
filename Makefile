@@ -6,17 +6,18 @@
 #    By: hyilmaz <hyilmaz@student.codam.nl>           +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/11/02 12:45:21 by hyilmaz       #+#    #+#                  #
-#    Updated: 2021/11/22 15:44:09 by hyilmaz       ########   odam.nl          #
+#    Updated: 2021/11/23 00:12:08 by hyilmaz       ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
+
+# Compiler flags
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
+DBGFLAGS = -g -fsanitize=address
 
-ifdef DEBUG
-CFLAGS := $(CFLAGS) -g -fsanitize=address
-endif
 
+# Project sources and headers
 ifdef BONUS
 SRC_FILES_EXTRA = check_input_bonus.c execute_commands_bonus.c processes_bonus.c
 HEADER_FILES_EXTRA = processes_bonus.h
@@ -24,7 +25,6 @@ else
 SRC_FILES_EXTRA = check_input.c execute_commands.c 
 endif
 
-# Mandatory
 SRC_DIR = src
 SRC_FILES = pipex.c \
 			parser/parse_input.c \
@@ -54,8 +54,15 @@ HEADER_FILES = 	pipex.h \
 
 HEADER_FILES := $(HEADER_FILES) $(HEADER_FILES_EXTRA)
 
-OBJ_DIR = obj
-OBJ_FILES = $(SRC_FILES:%.c=$(OBJ_DIR)/%.o)
+# Release Object files
+REL_OBJ_DIR = rel_obj
+REL_OBJ_FILES = $(SRC_FILES:%.c=$(REL_OBJ_DIR)/%.o)
+NAME = pipex
+
+# Debug build settings
+DBG_DIR = obj_debug
+DBG_OBJ_FILES = $(SRC_FILES:%.c=$(DBG_DIR)/%.o)
+DBGEXE = pipex_debug
 
 # Libft
 LIBFT_DIR = $(SRC_DIR)/libft
@@ -64,39 +71,63 @@ LIBFT = libft.a
 # Set VPATH to look into src directory
 VPATH = src
 
-# Program name
-NAME = pipex
+# Default build
+all: $(REL_OBJ_DIR) $(LIBFT) $(NAME)
 
-all: $(OBJ_DIR) $(LIBFT) $(NAME)
+# Debug rules
+debug: $(DBG_DIR) $(LIBFT) $(DBGEXE)
 
-$(OBJ_DIR):
+######################
+# Create directories #
+######################
+$(REL_OBJ_DIR):
 	mkdir -p $@
 	mkdir -p $@/utils
 	mkdir -p $@/parser
 
+$(DBG_DIR):
+	mkdir -p $@
+	mkdir -p $@/utils
+	mkdir -p $@/parser
+
+###############
+# Libft Build #
+###############
 $(LIBFT):
 	make -C $(LIBFT_DIR)
 
-$(NAME): $(OBJ_FILES)
+###############
+# Debug Build #
+###############
+$(DBGEXE): $(DBG_OBJ_FILES)
+	$(CC) $(CFLAGS) $(DBGFLAGS) $^ $(LIBFT_DIR)/$(LIBFT) -o $@
+
+$(DBG_OBJ_FILES): $(DBG_DIR)/%.o: %.c $(HEADER_FILES)
+	$(CC) $(CFLAGS) $(DBGFLAGS) -c $< -o $@
+
+#################
+# Release Build #
+#################
+$(NAME): $(REL_OBJ_FILES)
 	$(CC) $(CFLAGS) $^ $(LIBFT_DIR)/$(LIBFT) -o $@
 
-$(OBJ_FILES): $(OBJ_DIR)/%.o: %.c $(HEADER_FILES)
+$(REL_OBJ_FILES): $(REL_OBJ_DIR)/%.o: %.c $(HEADER_FILES)
 	$(CC) $(CFLAGS) -c $< -o $@
-
-debug:
-	$(MAKE) DEBUG=1 re
 
 bonus:
 	$(MAKE) BONUS=1 all
 
+debug_bonus:
+	$(MAKE) BONUS=1 debug
+
 clean:
 	make clean -C $(LIBFT_DIR)
-	rm -rf $(OBJ_DIR)
+	rm -rf $(REL_OBJ_DIR) $(DBG_DIR)
 
 fclean: clean
 	make fclean -C $(LIBFT_DIR)
-	rm -f $(NAME)
+	rm -f $(NAME) $(DBGEXE)
 
 re: fclean all
 
-.PHONY: all clean fclean re bonus
+.PHONY: all clean fclean re bonus debug

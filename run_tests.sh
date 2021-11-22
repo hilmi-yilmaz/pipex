@@ -7,15 +7,28 @@ RED="\033[0;31m"
 GREEN="\033[0;32m"
 NC="\033[0m"
 
+# Program input
+if [[ "$1" == "bonus" ]]; then
+	bonus="1"
+else
+	bonus="0"
+fi
+
 # Exit variables
 exit_status_bash="0"
 exit_status_yours="0"
 
 # Check for pipex executable
-if [[ ! -f pipex ]]; then
+if [[ -f pipex_debug ]]; then
+	pipex="./pipex_debug"
+elif [[ -f pipex ]]; then
+	pipex="./pipex"
+else
 	echo "No pipex executable found."
 	exit 1
 fi
+
+echo "Running $pipex"
 
 # Input file name
 file_in="/tmp/file_in"
@@ -35,14 +48,19 @@ EOF
 # $4: output file
 run_pipex()
 {
-	./pipex "$1" "$2" "$3" "$4"
+	"$pipex" "$1" "$2" "$3" "$4"
 	exit_status_yours="$?"
 }
 
 # $1 whole command to execute
 run_bash()
 {
-	zsh -c "$1"
+	if [[ "$(uname)" == "Linux" ]]; then
+		bash -c "$1"
+	else
+		zsh -c "$1"
+	fi
+
 	exit_status_bash="$?"
 }
 
@@ -284,4 +302,11 @@ run_pipex "$file_in" "grep contents" "wc -l" "/tmp/file_out_yours"
 export PATH="$tmp_path"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
-echo "Now test the program yourself with wrong amount of arguments."
+if [[ "$bonus" == "1" ]]; then
+	# Test 33
+	echo "Test 33: Multiple commands"
+	run_bash "< $file_in ls -l | grep pipex | wc -l > /tmp/file_out_bash"
+	"$pipex" "$file_in" "ls -l" "grep pipex" "wc -l" "/tmp/file_out_yours"
+	exit_status_yours="$?"
+	compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+fi
