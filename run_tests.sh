@@ -42,7 +42,7 @@ run_pipex()
 # $1 whole command to execute
 run_bash()
 {
-	bash -c "$1"
+	zsh -c "$1"
 	exit_status_bash="$?"
 }
 
@@ -283,3 +283,5 @@ run_bash "< $file_in grep contents | wc -l > /tmp/file_out_bash"
 run_pipex "$file_in" "grep contents" "wc -l" "/tmp/file_out_yours"
 export PATH="$tmp_path"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+
+echo "Now test the program yourself with wrong amount of arguments."

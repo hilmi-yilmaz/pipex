@@ -1,26 +1,28 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   free_data.h                                        :+:    :+:            */
+/*   check_input_bonus.c                                :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/11/21 14:12:01 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/21 14:12:02 by hyilmaz       ########   odam.nl         */
+/*   Created: 2021/11/22 14:56:59 by hyilmaz       #+#    #+#                 */
+/*   Updated: 2021/11/22 15:17:31 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FREE_DATA_H
-# define FREE_DATA_H
+#include "check_input.h"
 
-/* System headers */
-# include <stdlib.h>
-# include <stdio.h>
+/*
+** Check argc. If not 5, exit program with error message.
+*/
 
-/* User defined headers */
-# include "data.h"
-
-/* Function prototypes */
-void	free_all(t_data data, int num_commands);
-
-#endif
+int	check_input(int argc)
+{
+	if (argc < 5)
+	{
+		ft_putstr_fd("Error\nWrong amount of arguments. \
+Run as: ./pipex file_in cmd[1] cmd[2] ... cmd[n] file_out", STDOUT_FILENO);
+		return (RETURN_FAILURE);
+	}
+	return (RETURN_SUCCESS);
+}

@@ -1,32 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   utils.h                                            :+:    :+:            */
+/*   parse_input.h                                      :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/11/02 12:45:49 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/17 14:33:51 by hyilmaz       ########   odam.nl         */
+/*   Created: 2021/11/02 12:45:34 by hyilmaz       #+#    #+#                 */
+/*   Updated: 2021/11/22 12:22:33 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef UTILS_H
-# define UTILS_H
-
-/* System headers */
-# include <stdio.h>
-# include <unistd.h>
-# include <stdlib.h>
+#ifndef PARSE_INPUT_H
+# define PARSE_INPUT_H
 
 /* User defined headers */
-# include "data.h"
+# include "../libft/libft.h"
+# include "../data.h"
+# include "get_commands.h"
+# include "get_filenames.h"
+# include "../utils/utils.h"
 
 /* Function prototypes */
-int		wrapper_close(int fd);
-int		wrapper_pipe(int *fds);
-int		str_all_same_chars(char *str, char c);
-void	free_data(t_data data, int num_commands);
-void	print_str_array(char **str);
-void	print_data(t_data data, int num_commands);
+int	parse_input(t_data *data, int argc, char **argv, char **envp);
 
 #endif

@@ -1,27 +1,21 @@
-// /* ************************************************************************** */
+/* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
 /*   pipex.c                                            :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/11/02 12:45:25 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/10 16:02:05 by hyilmaz       ########   odam.nl         */
+/*   Created: 2021/11/22 13:49:36 by hyilmaz       #+#    #+#                 */
+/*   Updated: 2021/11/22 14:56:56 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "pipex.h"
 
-static int	check_input(int argc)
-{
-	if (argc != 5)
-    {
-		ft_putstr_fd("Error\nWrong amount of arguments. \
-Run as: ./pipex file_in cmd1 cmd2 file_out", STDOUT_FILENO);
-		return (RETURN_FAILURE);
-	}
-	return (RETURN_SUCCESS);
-}
+/*
+** Wait for all children to finish.
+** Return the exit status of the last process.
+*/
 
 static int	wait_and_get_last_exit_status(int last_process_pid)
 {
@@ -43,29 +37,12 @@ static int	wait_and_get_last_exit_status(int last_process_pid)
 	return (last_process_status);
 }
 
-static int	execute_commands(t_data data, int num_commands, char **envp, int *last_process_pid)
-{
-	int			i;
-	int			read_end_pipe;
-
-	i = 0;
-	read_end_pipe = -1;
-	while (i < num_commands)
-	{
-		if (i != num_commands - 1)
-			if (wrapper_pipe(data.fds) == -1)
-				return (RETURN_FAILURE);
-		if (i == 0)
-			first_child(&data, envp, i);
-		else
-			last_child(&data, envp, read_end_pipe, i, last_process_pid);
-		read_end_pipe = data.fds[0];
-		close(data.fds[1]);
-		i++;
-	}
-	close(data.fds[0]);
-	return (RETURN_SUCCESS);
-}
+/*
+** Pipex program which replicates the behaviour of pipes in bash.
+** Run as: 			./pipex file_in cmd1 cmd2 file_out
+** Equivalent to:	< file_in cmd1 | cmd2 > file_out
+** in Bash.
+*/
 
 int	main(int argc, char **argv, char **envp)
 {

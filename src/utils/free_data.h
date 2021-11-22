@@ -1,36 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        ::::::::            */
-/*   pipex.h                                            :+:    :+:            */
+/*   free_data.h                                        :+:    :+:            */
 /*                                                     +:+                    */
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/11/02 12:45:12 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/22 14:59:02 by hyilmaz       ########   odam.nl         */
+/*   Created: 2021/11/21 14:12:01 by hyilmaz       #+#    #+#                 */
+/*   Updated: 2021/11/22 11:50:29 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PIPEX_H
-# define PIPEX_H
+#ifndef FREE_DATA_H
+# define FREE_DATA_H
 
 /* System headers */
+# include <stdlib.h>
 # include <stdio.h>
-# include <stdlib.h>
-# include <unistd.h>
-# include <string.h>
-# include <errno.h>
-# include <stdlib.h>
-# include <sys/wait.h>
-# include <fcntl.h>
 
 /* User defined headers */
-# include "libft/libft.h"
-# include "data.h"
-# include "parser/parse_input.h"
-# include "processes.h"
-# include "execute_commands.h"
-# include "utils/utils.h"
-# include "utils/free_data.h"
-# include "check_input.h"
+# include "../data.h"
+
+/* Function prototypes */
+void	free_all(t_data data, int num_commands);
 
 #endif
