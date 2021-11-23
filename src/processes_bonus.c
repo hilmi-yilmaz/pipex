@@ -6,13 +6,13 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:06 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/22 15:52:08 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/23 12:35:07 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "processes_bonus.h"
 
-int middle_child(t_data *data, char **envp, int read_end_pipe, int i)
+int	middle_child(t_data *data, char **envp, int read_end_pipe, int i)
 {
 	int	pid;
 
