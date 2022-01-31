@@ -59,7 +59,7 @@ static int	append_slash_in_front_of_command(char **command)
 
 	tmp = *command;
 	*command = ft_strjoin("/", *command);
-	if (command == NULL)
+	if (*command == NULL)
 	{
 		perror("Error with malloc");
 		return (RETURN_FAILURE);
