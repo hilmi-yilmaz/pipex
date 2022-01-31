@@ -303,10 +303,40 @@ export PATH="$tmp_path"
 compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
 
 if [[ "$bonus" == "1" ]]; then
+
 	# Test 33
 	echo "Test 33: Multiple commands"
 	run_bash "< $file_in ls -l | grep pipex | wc -l > /tmp/file_out_bash"
 	"$pipex" "$file_in" "ls -l" "grep pipex" "wc -l" "/tmp/file_out_yours"
 	exit_status_yours="$?"
 	compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+
+	# Test 34
+	echo "Test 34: Multiple commands empty input middle command"
+	run_bash "< $file_in ls -l | \"\" | wc -l > /tmp/file_out_bash"
+	"$pipex" "$file_in" "ls -l" "" "wc -l" "/tmp/file_out_yours"
+	exit_status_yours="$?"
+	compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+
+	# Test 35
+	echo "Test 35: Multiple commands empty input last command"
+	run_bash "< $file_in ls -l | grep pipex | \"\" > /tmp/file_out_bash"
+	"$pipex" "$file_in" "ls -l" "grep pipex" "" "/tmp/file_out_yours"
+	exit_status_yours="$?"
+	compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+
+	# Test 36
+	echo "Test 36: Multiple commands, no process communication"
+	run_bash "< $file_in ls -l | ping -c 3 google.com | cat $file_in > /tmp/file_out_bash"
+	"$pipex" "$file_in" "ls -l" "ping -c 3 google.com" "cat $file_in" "/tmp/file_out_yours"
+	exit_status_yours="$?"
+	compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+
+	# Test 37
+	echo "Test 37: Multiple commands extreme, no process communication"
+	run_bash "< $file_in ls -l | ls -l | ls -l | ls -l | ls -l | ls -l | ls -l | ls -l | ls -l | ls -l | ls -l | ls -l | ls -l | ls -l | ls -l | ls -l | ls -l | ls -l | ls -l | ls -l | ls -l | ls -l | ls -l | ls -l | ls -l | ls -l | ls -l | ls -l | ls -l | ls -la | wc -l > /tmp/file_out_bash"
+	"$pipex" "$file_in" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -l" "ls -la" "wc -l" "/tmp/file_out_yours"
+	exit_status_yours="$?"
+	compare_outputs "$exit_status_bash" "$exit_status_yours" "/tmp/file_out_bash" "/tmp/file_out_yours"
+
 fi

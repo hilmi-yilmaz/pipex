@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:42 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/22 15:17:14 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/23 12:35:15 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,6 @@
 # include "utils/utils.h"
 
 /* Function prototypes */
-int middle_child(t_data *data, char **envp, int read_end_pipe, int i);
+int	middle_child(t_data *data, char **envp, int read_end_pipe, int i);
 
 #endif

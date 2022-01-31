@@ -6,7 +6,7 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:06 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/22 15:10:25 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/23 12:38:55 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@
 static int	open_input_file(t_data *data)
 {
 	int	file_in_fd;
-	
+
 	file_in_fd = open(data->file_in_name, O_RDONLY);
 	if (file_in_fd == -1)
 	{
@@ -37,7 +37,7 @@ static int	open_input_file(t_data *data)
 static int	open_output_file(t_data *data)
 {
 	int	file_out_fd;
-	
+
 	file_out_fd = open(data->file_out_name, O_CREAT | O_WRONLY | O_TRUNC, 0666);
 	if (file_out_fd == -1)
 	{
@@ -57,7 +57,7 @@ int	first_child(t_data *data, char **envp, int i)
 {
 	int	pid;
 	int	file_in_fd;
-	
+
 	pid = wrapper_fork();
 	if (pid == 0)
 	{
@@ -83,7 +83,7 @@ int	first_child(t_data *data, char **envp, int i)
 int	last_child(t_data *data, char **envp, int i, int *last_pid)
 {
 	int	file_out_fd;
-	
+
 	*last_pid = wrapper_fork();
 	if (*last_pid == 0)
 	{

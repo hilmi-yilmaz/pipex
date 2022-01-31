@@ -6,16 +6,16 @@
 /*   By: hyilmaz <hyilmaz@student.codam.nl>           +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/11/02 12:45:46 by hyilmaz       #+#    #+#                 */
-/*   Updated: 2021/11/22 15:10:38 by hyilmaz       ########   odam.nl         */
+/*   Updated: 2021/11/23 12:37:18 by hyilmaz       ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "utils.h"
 
-int	wrapper_fork()
+int	wrapper_fork(void)
 {
 	int	pid;
-	
+
 	pid = fork();
 	if (pid < 0)
 	{
